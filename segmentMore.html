@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
+    <script src="./d3plugin/d3.js"></script>
+    <script src="./d3plugin/reportD3.plugin.js"></script>
+    <script src="./d3plugin/allReport.js"></script>
+    <title>segmentMore多条线段分割数据统计图可展示线段对应id等参数</title>
+    <style>
+        #JQ_risk_column {
+            height: 460px;
+        }
+
+        .zy-d3-tip {
+            position: absolute;
+            z-index: 11;
+            left: 0;
+            top: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 12px;
+            padding: 5px 7px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="JQ_risk_column"></div>
+    <script>
+        var data = {
+            "bool": true,
+            "message": "",
+            "needFormat_": "need",
+            "result": {
+                "relativeRiskScoreMapList": [{
+                    "FROM_MILEAGE": 0,
+                    "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
+                    "NAME_": "一门站-郭巷啥子",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 40.04,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 1766.60716041
+                }, {
+                    "FROM_MILEAGE": 0,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.17,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 2788.85963135
+                }, {
+                    "FROM_MILEAGE": 0,
+                    "PIPE_LINE_ID": "2c62438d2c9f490d80334c2c37a2b350",
+                    "NAME_": "三门站-哈哈哈站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.94,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 1243.50458661
+                }, {
+                    "FROM_MILEAGE": 0,
+                    "PIPE_LINE_ID": "5f76fd5433b04878a225f2539ad7222d",
+                    "NAME_": "四门站-累的很站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.03,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 4984.05703719
+                }, {
+                    "FROM_MILEAGE": 0,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 53.8,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 5735.49135808
+                }, {
+                    "FROM_MILEAGE": 0,
+                    "PIPE_LINE_ID": "257bcbc60574487ca6da14fd243581c8",
+                    "NAME_": "六门站-咋个还没完",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 57.1,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 3478.13122894
+                }, {
+                    "FROM_MILEAGE": 0,
+                    "PIPE_LINE_ID": "2405f9b81b40428b999e22a145ff546c",
+                    "NAME_": "七门站-FUCK",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 168.53,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 800.26314576
+                }, {
+                    "FROM_MILEAGE": 0,
+                    "PIPE_LINE_ID": "cf35b53544564caea24ae2e86c942154",
+                    "NAME_": "八门站-NB",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 42.3,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 1262.21639363
+                }, {
+                    "FROM_MILEAGE": 800.26314576,
+                    "PIPE_LINE_ID": "2405f9b81b40428b999e22a145ff546c",
+                    "NAME_": "七门站-FUCK",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 172.03,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 1137.43404716
+                }, {
+                    "FROM_MILEAGE": 1137.43404716,
+                    "PIPE_LINE_ID": "2405f9b81b40428b999e22a145ff546c",
+                    "NAME_": "七门站-FUCK",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 173.04,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 1900.99416927
+                }, {
+                    "FROM_MILEAGE": 1243.50458661,
+                    "PIPE_LINE_ID": "2c62438d2c9f490d80334c2c37a2b350",
+                    "NAME_": "三门站-哈哈哈站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.71,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 5442.08655899
+                }, {
+                    "FROM_MILEAGE": 1766.60716041,
+                    "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
+                    "NAME_": "一门站-郭巷啥子",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 40.87,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 1879.8421029
+                }, {
+                    "FROM_MILEAGE": 1879.8421029,
+                    "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
+                    "NAME_": "一门站-郭巷啥子",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 61.82,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 2858.41255355
+                }, {
+                    "FROM_MILEAGE": 2788.85963135,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.03,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 4595.28619499
+                }, {
+                    "FROM_MILEAGE": 2858.41255355,
+                    "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
+                    "NAME_": "一门站-郭巷啥子",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.6,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 7959.53844417
+                }, {
+                    "FROM_MILEAGE": 3478.13122894,
+                    "PIPE_LINE_ID": "257bcbc60574487ca6da14fd243581c8",
+                    "NAME_": "六门站-咋个还没完",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 87.62,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 5444.83274606
+                }, {
+                    "FROM_MILEAGE": 4595.28619499,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 57.39,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 4720.36335679
+                }, {
+                    "FROM_MILEAGE": 4720.36335679,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 61.36,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 5763.95612792
+                }, {
+                    "FROM_MILEAGE": 4984.05703719,
+                    "PIPE_LINE_ID": "5f76fd5433b04878a225f2539ad7222d",
+                    "NAME_": "四门站-累的很站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.68,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 5616.8831798
+                }, {
+                    "FROM_MILEAGE": 5442.08655899,
+                    "PIPE_LINE_ID": "2c62438d2c9f490d80334c2c37a2b350",
+                    "NAME_": "三门站-哈哈哈站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.86,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 5573.38849701
+                }, {
+                    "FROM_MILEAGE": 5573.38849701,
+                    "PIPE_LINE_ID": "2c62438d2c9f490d80334c2c37a2b350",
+                    "NAME_": "三门站-哈哈哈站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.59,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 7591.30615513
+                }, {
+                    "FROM_MILEAGE": 5616.8831798,
+                    "PIPE_LINE_ID": "5f76fd5433b04878a225f2539ad7222d",
+                    "NAME_": "四门站-累的很站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.31,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 6505.21845454
+                }, {
+                    "FROM_MILEAGE": 5735.49135808,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 53.86,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 14675.97010291
+                }, {
+                    "FROM_MILEAGE": 5763.95612792,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.04,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 9420.80230081
+                }, {
+                    "FROM_MILEAGE": 6520.73922603,
+                    "PIPE_LINE_ID": "5f76fd5433b04878a225f2539ad7222d",
+                    "NAME_": "四门站-累的很站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.83,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 12850.51883713
+                }, {
+                    "FROM_MILEAGE": 7591.30615513,
+                    "PIPE_LINE_ID": "2c62438d2c9f490d80334c2c37a2b350",
+                    "NAME_": "三门站-哈哈哈站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.59,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 7696.26999403
+                }, {
+                    "FROM_MILEAGE": 7696.26999403,
+                    "PIPE_LINE_ID": "2c62438d2c9f490d80334c2c37a2b350",
+                    "NAME_": "三门站-哈哈哈站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.35,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 9806.15823361
+                }, {
+                    "FROM_MILEAGE": 7959.53844417,
+                    "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
+                    "NAME_": "一门站-郭巷啥子",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.84,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 11373.75699852
+                }, {
+                    "FROM_MILEAGE": 9420.80230081,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 39.03,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 15473.7184719
+                }, {
+                    "FROM_MILEAGE": 9806.15823361,
+                    "PIPE_LINE_ID": "2c62438d2c9f490d80334c2c37a2b350",
+                    "NAME_": "三门站-哈哈哈站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 62.79,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 10830.08415819
+                }, {
+                    "FROM_MILEAGE": 10830.08415819,
+                    "PIPE_LINE_ID": "2c62438d2c9f490d80334c2c37a2b350",
+                    "NAME_": "三门站-哈哈哈站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 129.6,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 11028.0290343
+                }, {
+                    "FROM_MILEAGE": 11028.0290343,
+                    "PIPE_LINE_ID": "2c62438d2c9f490d80334c2c37a2b350",
+                    "NAME_": "三门站-哈哈哈站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 128.36,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 12847.17945273
+                }, {
+                    "FROM_MILEAGE": 11373.75699852,
+                    "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
+                    "NAME_": "一门站-郭巷啥子",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.12,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 11533.68949743
+                }, {
+                    "FROM_MILEAGE": 11533.68949743,
+                    "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
+                    "NAME_": "一门站-郭巷啥子",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.42,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 14906.62464399
+                }, {
+                    "FROM_MILEAGE": 12776.40634145,
+                    "PIPE_LINE_ID": "2c62438d2c9f490d80334c2c37a2b350",
+                    "NAME_": "三门站-哈哈哈站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 31.07,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 13132.63682848
+                }, {
+                    "FROM_MILEAGE": 12850.51883713,
+                    "PIPE_LINE_ID": "5f76fd5433b04878a225f2539ad7222d",
+                    "NAME_": "四门站-累的很站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.81,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 12924.91466919
+                }, {
+                    "FROM_MILEAGE": 12924.91466919,
+                    "PIPE_LINE_ID": "5f76fd5433b04878a225f2539ad7222d",
+                    "NAME_": "四门站-累的很站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.92,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 16962.61586868
+                }, {
+                    "FROM_MILEAGE": 13132.63682848,
+                    "PIPE_LINE_ID": "2c62438d2c9f490d80334c2c37a2b350",
+                    "NAME_": "三门站-哈哈哈站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.78,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 18843.26372068
+                }, {
+                    "FROM_MILEAGE": 14675.97010291,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 55.2,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 15779.50976308
+                }, {
+                    "FROM_MILEAGE": 14906.62464399,
+                    "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
+                    "NAME_": "一门站-郭巷啥子",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.12,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 15088.44441112
+                }, {
+                    "FROM_MILEAGE": 15088.44441112,
+                    "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
+                    "NAME_": "一门站-郭巷啥子",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.44,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 21062.41166144
+                }, {
+                    "FROM_MILEAGE": 15473.7184719,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 39.36,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 17679.52212841
+                }, {
+                    "FROM_MILEAGE": 15779.50976308,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 165.71,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 18661.13058236
+                }, {
+                    "FROM_MILEAGE": 16962.61586868,
+                    "PIPE_LINE_ID": "5f76fd5433b04878a225f2539ad7222d",
+                    "NAME_": "四门站-累的很站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.68,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 17082.85953079
+                }, {
+                    "FROM_MILEAGE": 17082.85953079,
+                    "PIPE_LINE_ID": "5f76fd5433b04878a225f2539ad7222d",
+                    "NAME_": "四门站-累的很站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.79,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 18556.79163449
+                }, {
+                    "FROM_MILEAGE": 17679.52212841,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 40.83,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 18067.63865711
+                }, {
+                    "FROM_MILEAGE": 18067.63865711,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 39.63,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 19096.1447132
+                }, {
+                    "FROM_MILEAGE": 18556.79163449,
+                    "PIPE_LINE_ID": "5f76fd5433b04878a225f2539ad7222d",
+                    "NAME_": "四门站-累的很站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.86,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 21555.2649558
+                }, {
+                    "FROM_MILEAGE": 18661.13058236,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 171.89,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 18755.03565897
+                }, {
+                    "FROM_MILEAGE": 18755.03565897,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 166.88,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 20442.75537551
+                }, {
+                    "FROM_MILEAGE": 19096.1447132,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 40.83,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 19173.44045601
+                }, {
+                    "FROM_MILEAGE": 19173.44045601,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 40.45,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 21434.49237966
+                }, {
+                    "FROM_MILEAGE": 20442.75537551,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 171.89,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 20521.61250889
+                }, {
+                    "FROM_MILEAGE": 20521.61250889,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 167.46,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 21550.81643744
+                }, {
+                    "FROM_MILEAGE": 21434.49237966,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 39.42,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 22392.73510637
+                }, {
+                    "FROM_MILEAGE": 21550.81643744,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 171.65,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 21643.18267921
+                }, {
+                    "FROM_MILEAGE": 21555.2649558,
+                    "PIPE_LINE_ID": "5f76fd5433b04878a225f2539ad7222d",
+                    "NAME_": "四门站-累的很站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 39.69,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 24480.75403421
+                }, {
+                    "FROM_MILEAGE": 21643.18267921,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 166.3,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 22754.21985341
+                }, {
+                    "FROM_MILEAGE": 22392.73510637,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 61.14,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 24734.62978753
+                }, {
+                    "FROM_MILEAGE": 22754.21985341,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 166.51,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 22833.56890743
+                }, {
+                    "FROM_MILEAGE": 22833.56890743,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 52.67,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 24959.64590793
+                }, {
+                    "FROM_MILEAGE": 24480.75403421,
+                    "PIPE_LINE_ID": "5f76fd5433b04878a225f2539ad7222d",
+                    "NAME_": "四门站-累的很站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 38.91,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 24542.2824122
+                }, {
+                    "FROM_MILEAGE": 24542.2824122,
+                    "PIPE_LINE_ID": "5f76fd5433b04878a225f2539ad7222d",
+                    "NAME_": "四门站-累的很站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 40.63,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 27812.70434178
+                }, {
+                    "FROM_MILEAGE": 24734.62978753,
+                    "PIPE_LINE_ID": "d86e19ac0a894be4a73e11d82a40b58a",
+                    "NAME_": "二门站-太平清管站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 29.91,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 25243.03864466
+                }, {
+                    "FROM_MILEAGE": 24959.64590793,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 40.04,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 29470.98820662
+                }, {
+                    "FROM_MILEAGE": 29470.98820662,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 55.5,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 29577.36831257
+                }, {
+                    "FROM_MILEAGE": 29577.36831257,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 54.19,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 30658.84505849
+                }, {
+                    "FROM_MILEAGE": 30658.84505849,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 166.51,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 30744.46611739
+                }, {
+                    "FROM_MILEAGE": 30744.46611739,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 80.94,
+                    "RISKYYYY": "2014",
+                    "TO_MILEAGE": 37686.86448577
+                }, {
+                    "FROM_MILEAGE": 0,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 80.94,
+                    "RISKYYYY": "2015",
+                    "TO_MILEAGE": 7686.86448577
+                }, {
+                    "FROM_MILEAGE": 7686.86448577,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 85.94,
+                    "RISKYYYY": "2015",
+                    "TO_MILEAGE": 8686.86448577
+                }, {
+                    "FROM_MILEAGE": 8686.86448577,
+                    "PIPE_LINE_ID": "80f87fc1369f4ad9b119047c8779d426",
+                    "NAME_": "五门站-不行了站",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 85.94,
+                    "RISKYYYY": "2015",
+                    "TO_MILEAGE": 9686.86448577
+                }],
+                "riskYYYYs": ["2016", null]
+            }
+        };
+        var testDate = ["2014", "2015"];
+        var evalDate = data.result.riskYYYYs;
+        var level_text = [],
+            level_legend = [
+                ['暂无第二次数据', '#37a4dd'],
+                ['暂无第二次数据', '#fe8e07']
+            ];
+        var pipe_score_text = [],
+            pipe_score_legend = [
+                ['暂无第二次数据', '#37a4dd'],
+                ['暂无第二次数据', '#fe8e07']
+            ];
+        var melege_score_text = [],
+            melege_score_legend = [
+                ['暂无第二次数据', '#37a4dd'],
+                ['暂无第二次数据', '#fe8e07']
+            ];
+
+        for (var x = 0; x < testDate.length; x++) {
+            if (testDate[x]) {
+                level_text.push(testDate[x] + '年风险评价结果');
+                level_legend[x][0] = testDate[x] + '年风险评价结果';
+                pipe_score_text.push(testDate[x] + '年评分');
+                pipe_score_legend[x][0] = testDate[x] + '年评分';
+                melege_score_text.push(testDate[x] + '年管道风险评分');
+                melege_score_legend[x][0] = testDate[x] + '年管道风险评分';
+            }
+        }
+
+        var pileMelegeData = data.result.relativeRiskScoreMapList;
+
+        //获取管道ID种类,返回一个数组
+        function getIdArr(data) {
+            var result = [],
+                arr = [];
+            for (var i = 0; i < data.length; i++) {
+                if (data[i]["PIPE_LINE_ID"]) {
+                    arr.push(data[i]["PIPE_LINE_ID"]);
+                }
+            }
+            //此方法新建一个数组，循环前数组，用indexOf判断新数组里是否包含现有数组，如没有则push进新数组，有则不做任何操作！
+            for (var j = 0; j < arr.length; j++) {
+                if (result.indexOf(arr[j]) < 0) {
+                    result.push(arr[j]);
+                }
+            }
+            return result;
+        }
+        var IdArr = getIdArr(pileMelegeData);
+
+        //获取图表数据
+        function getChartData(data, idArr, timeArr) {
+            var result = [],
+                r1 = [],
+                r2 = [];
+            if (timeArr[0]) {
+                for (var y = 0; y < idArr.length; y++) {
+                    var list = [];
+                    var item = [];
+                    for (var z = 0; z < data.length; z++) {
+                        if (data[z]["PIPE_LINE_ID"] == idArr[y] && data[z]["RISKYYYY"] == timeArr[0]) {
+                            list.push([parseFloat(data[z].FROM_MILEAGE), parseFloat(data[z].RELATIVE_RISK_SCORE)], [
+                                parseFloat(data[z].TO_MILEAGE), parseFloat(data[z].RELATIVE_RISK_SCORE)
+                            ]);
+                            item = [data[z].NAME_];
+                        }
+                    }
+                    var pairs = d3.pairs(list);
+                    r1.push([pairs,item]);
+                }
+            }
+            if (timeArr[1]) {
+                for (var y = 0; y < idArr.length; y++) {
+                    var list = [];
+                    var item = [];
+                    for (var z = 0; z < data.length; z++) {
+                        if (data[z]["PIPE_LINE_ID"] == idArr[y] && data[z]["RISKYYYY"] == timeArr[1]) {
+                            list.push([parseFloat(data[z].FROM_MILEAGE), parseFloat(data[z].RELATIVE_RISK_SCORE)], [
+                                parseFloat(data[z].TO_MILEAGE), parseFloat(data[z].RELATIVE_RISK_SCORE)
+                            ]);
+                            item = [data[z].NAME_];
+                        }
+                    }
+                    var pairs = d3.pairs(list);
+                    r2.push([pairs,item]);
+                }
+            }
+
+            result = [r1, r2];
+            return result;
+        }
+
+        // dyy项目中将testData改为evalDate testDate = ["2014", "2015"];
+        var melgeChartData = getChartData(pileMelegeData, IdArr, testDate);
+        
+        //获取图表横轴范围
+        function getXArea(data) {
+            var XScale = [],
+                FROM = [],
+                TO = [];
+            for (var s = 0; s < data.length; s++) {
+                FROM.push(data[s].FROM_MILEAGE);
+                TO.push(data[s].TO_MILEAGE);
+            }
+            XScale = [FROM, TO];
+            return XScale
+        }
+
+        var getXAreaData = getXArea(pileMelegeData);
+
+        var XArr = [];
+        if (getXAreaData.length > 0) {
+            for (var r = 0; r < getXAreaData.length; r++) {
+                for (var b = 0; b < getXAreaData[r].length; b++) {
+                    XArr.push(getXAreaData[r][b]);
+                }
+            }
+        }
+
+        //获取图表数轴范围
+        function getYArea(data) {
+            var YScale = [],
+                value = [];
+            for (var s = 0; s < data.length; s++) {
+                value.push(data[s].RELATIVE_RISK_SCORE);
+            }
+            YScale = [value]
+            return YScale
+        }
+
+        var YArr = getYArea(pileMelegeData)[0];
+
+        Xcharts.segmentMore({
+            container: 'JQ_risk_column',
+            color: ['#37a4dd', '#fe8e07'],
+            text: melege_score_text,
+            xAxis: {
+                data: [d3.min(XArr), d3.max(XArr)], // x轴数据
+                ticks: 10 // x轴刻度数
+            },
+            yAxis: {
+                data: [0, d3.max(YArr)],
+                ticks: 10
+            },
+            data: melgeChartData,
+            layout: {
+                xtag: '里程',
+                ytag: '风险分值',
+                tagColor: '#8393ad', //xY轴文本颜色
+                gridColor: '#8393ad', // 网格颜色
+                axisColor: '#8393ad', // 坐标轴颜色
+                axisFontColor: '#8393ad', // 坐标轴字体颜色
+                margin: {
+                    left: 60,
+                    right: 50,
+                    top: 50,
+                    bottom: 50
+                }
+            },
+            pointText: {
+                circle: true,
+                startShow: true
+            },
+            legend: {
+                data: melege_score_legend,
+                width: 170,
+                location: 0
+            }
+        });
+    </script>
+</body>
+
+</html>
