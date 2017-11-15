@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
+    <script src="./d3plugin/d3.js"></script>
+    <script src="./d3plugin/reportD3.plugin.js"></script>
+    <script src="./d3plugin/allReport.js"></script>
+    <title>ring环形统计图-展示风险分值降低</title>
+    <style>
+        #JQ_risk_column {
+            height: 460px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="JQ_risk_column"></div>
+    <script>
+
+    data = 0.25
+    var pileMelegeData = data;    
+    /**
+     * 环形图
+     * data: Number
+     */
+    // 运营汇总部分+风险评分
+    // 风险分值降低
+    Xcharts.ring({
+        container: 'JQ_risk_column',
+        data:pileMelegeData
+    });
+    </script>
+</body>
+
+</html>
