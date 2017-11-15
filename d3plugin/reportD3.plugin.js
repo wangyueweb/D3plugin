@@ -1318,6 +1318,297 @@ var Xcharts = (function () {
                 .attr('shape-rendering', settings.layout.lineRender);
         }
     };
-    
+
+    charts.brushZoomI = function (config) {
+        var defaults = {
+            container: '',
+            color: ['#37a4dd', '#fe8e07'], // 线条颜色
+            text: ['2016年管道风险评分', '2017年管道风险评分'], // 线段名称
+            xAxis: { // x轴
+                data: [0, 2600], // x轴数据
+                ticks: 10, // x轴刻度数
+                index: [], // x轴索引
+                render: '', // 渲染回调函数
+                show: true, // 是否显示(默认true)
+                orient: 'bottom', // x轴方向(默认bottom)
+                sort: 'asc' // 刻度排序(默认上升asc)
+            },
+            yAxis: { // y轴
+                data: [0, 100],
+                ticks: 10,
+                index: [],
+                render: '',
+                show: true,
+                orient: 'left',
+                sort: 'asc'
+            },
+            data: [
+                [
+                    [
+                        [10, 20],
+                        [1000, 20]
+                    ],
+                    [
+                        [1000, 20],
+                        [1000, 30]
+                    ],
+                    [
+                        [1000, 30],
+                        [2000, 30]
+                    ]
+                ],
+                [
+                    [
+                        [10, 50],
+                        [1000, 50]
+                    ],
+                    [
+                        [1000, 50],
+                        [1000, 90]
+                    ],
+                    [
+                        [1000, 90],
+                        [2500, 90]
+                    ]
+                ]
+            ], // 原始数据集
+            layout: {
+                xtag: '绝对距离', // x轴显示文本
+                ytag: '评分分值', // y轴显示文本
+                tagColor: '#5c5c5c', //xY轴文本颜色
+                margin: {
+                    left: 60,
+                    right: 50,
+                    top: 50,
+                    bottom: 50
+                }, // 距容器边距
+                xgrid: true, // x轴网格
+                ygrid: true, // y轴网格
+                gridColor: '#f0f0f0', // 网格颜色
+                gridWidth: '1px', // 网格粗细
+                lineRender: 'crispEdges', // 网格线条清晰度
+                axisColor: '#f0f0f0', // 坐标轴颜色
+                axisFontColor: '#5c5c5c', // 坐标轴字体颜色
+                axisFontSize: '12px', // 坐标轴字体大小
+                lineWidth: '1.5px', // 线段宽度
+                lineEdges: 'default' // 线段清晰度
+            }, // 区间背景
+            pointText: {
+                show: false, // 节点文字是否显示(默认false不显示)
+                render: '', // 渲染回调函数
+                circle: true, // 节点圆圈是否显示(默认false不显示)
+                startShow: true, // 显示折线开始节点圆圈(默认false不显示)
+                stopShow: false // 显示折线结束节点圆圈(默认false不显示)
+            },
+            legend: {
+                data: [
+                    ['2016年管道风险评分', '#37a4dd'],
+                    ['2017年管道风险评分', '#fe8e07']
+                ], //标签数据
+                width: 170, //标签长度
+                location: 0 //标签所在x方向位置
+            }
+        };
+
+        var settings = extend(defaults, config);
+
+        var area = getDomArea(settings.container);
+
+        var width = area.width,
+            height = area.height;
+
+        if (settings.data.length === 0) {
+            d3.select('#' + settings.container).html(viewCon.emptyInfo);
+            return false;
+        }
+
+        var svg = d3.select("svg"),
+            margin = {
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 30
+            },
+            x0 = [0, 4000],
+            y0 = [0, 100],
+            width = +svg.attr("width"),
+            height = +svg.attr("height");
+
+
+        // 创建x和y轴的线性比例尺
+        var xScale = d3.scaleLinear().range([0, width]).domain(x0).nice(10),
+            yScale = d3.scaleLinear().range([height, 0]).domain(y0);
+
+
+        // 创建隐藏框
+        svg.append("defs").append("clipPath")
+            .attr("id", "clip");
+
+        // 创建x轴和y轴
+        var xAxis = d3.axisTop(xScale),
+            yAxis = d3.axisRight(yScale);
+
+        // 创建g
+        var g = svg.append("g")
+            .attr("transform", "translate(0,0)");
+        // 实例化x轴        
+        svg.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+        // 实例化y轴
+        svg.append("g")
+            // .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .attr("class", "axis axis--y")
+            .call(yAxis);
+
+        svg.selectAll(".domain")
+            .attr("display", "none");
+
+        /*--------- 添加折线 - start ---------*/
+        var line = d3.line()
+            .curve(d3.curveMonotoneX)
+            .x(function (d) {
+                return xScale(d[0]);
+            })
+            .y(function (d) {
+                return yScale(d[1]);
+            });
+
+        function returnValue(arr) {
+            if (arr[0][0] == arr[1][0]) {
+                return "";
+            } else {
+                return arr[0][1];
+            }
+        }
+
+        // 多条
+        if (settings.data.length > 0) {
+            for (var h = 0; h < settings.data.length; h++) {
+                for (var i = 0, len = settings.data[h].length; i < len; i++) {
+                    console.log();
+                    g.append('path')
+                        .attr('class', 'zy-line-path')
+                        .attr('transform', 'translate(0,0)')
+                        .attr('d', line(settings.data[h][i]))
+                        .attr('stroke', settings.color[h])
+                        .attr('fill', 'none')
+                        .attr('data', settings.data[h][i])
+                        // .attr('data-text', returnText(settings.text[h], settings.data[h][i]))
+                        .attr('data-value', returnValue(settings.data[h][i]))
+                        .attr('stroke-width', settings.layout.lineWidth)
+                        .attr('shape-rendering', settings.layout.lineEdges)
+                        .on('mousemove', function () {
+                            if (d3.select(this).attr('data-value')) {
+                                d3.select(this)
+                                    .attr('stroke-width', 4);
+                                // showTip(true, d3.event, d3.select(this));
+                            }
+                        })
+                        .on('mouseout', function () {
+                            if (d3.select(this).attr('data-value')) {
+                                d3.select(this)
+                                    .attr('stroke-width', settings.layout.lineWidth);
+                                //									  showTip(false);
+                            }
+                        });
+                }
+            }
+        }
+
+        // 多点
+        if (settings.data.length > 0) {
+            for (var k = 0; k < settings.data.length; k++) {
+                if (settings.pointText.circle) {
+                    // 单组
+                    if (settings.data[k].length > 0) {
+                        for (var j = 0, len_j = settings.data[k].length; j < len_j; j++) {
+                            g.append('g')
+                                .attr('class', 'zy-circle-all')
+                                //.attr('transform', 'translate(' + settings.layout.margin.left + ',' + settings.layout.margin.top + ')')
+                                .selectAll('circle')
+                                .data(settings.data[k][j])
+                                .enter()
+                                .append('circle')
+                                .attr('class', 'zy-circle')
+                                .attr('data', settings.data[k][j])
+                                .attr('cx', line.x())
+                                .attr('cy', line.y())
+                                .attr('r', 3)
+                                .attr('stroke', settings.color[k])
+                                .attr('fill', '#ffffff')
+                                .attr('stroke-width', '1.5px');
+                        }
+                    }
+                }
+            }
+        }
+
+        // 创建笔刷
+        var brush = d3.brush().on("end", brushended),
+            idleTimeout,
+            idleDelay = 350;
+
+        // 实例化笔刷
+        svg.append("g")
+            .attr("class", "brush")
+            .call(brush);
+
+        function brushended() {
+            var s = d3.event.selection;
+            if (!s) {
+                if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
+                xScale.domain(x0);
+                yScale.domain(y0);
+            } else {
+                xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
+                yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
+                svg.select(".brush").call(brush.move, null);
+            }
+            zoomed();
+        }
+
+        function idled() {
+            idleTimeout = null;
+        }
+
+        function zoomed() {
+            var t = d3.event.transform;
+            // var t = svg.transition().duration(750);
+            svg.select(".axis--x").transition(t).call(xAxis);
+            svg.select(".axis--y").transition(t).call(yAxis);
+
+            var line = d3.line()
+                .curve(d3.curveMonotoneX)
+                .x(function (d) {
+                    return xScale(d[0]);
+                })
+                .y(function (d) {
+                    return yScale(d[1]);
+                });
+
+            g.selectAll(".zy-line-path").transition(t).attr("d", function (d) {
+                var x = d3.select(this)
+                    .attr('data');
+                x = x.split(',');
+                var arr = [
+                    [parseFloat(x[0]), parseFloat(x[1])],
+                    [parseFloat(x[2]), parseFloat(x[3])]
+                ];
+                var val = line(arr);
+                return val;
+            });
+
+            g.selectAll(".zy-circle").transition(t)
+                .attr("cx", function (d) {
+                    return xScale(d[0]);
+                })
+                .attr("cy", function (d) {
+                    return yScale(d[1]);
+                });;
+        }
+    }
+
     return charts;
 })();
