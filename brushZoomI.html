@@ -4,7 +4,10 @@
 <head>
     <meta charset="utf-8" />
     <title>笔刷放大到域</title>
+    <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
     <script src="./d3plugin/d3.js"></script>
+    <script src="./d3plugin/reportD3.plugin.js"></script>
+    <script src="./d3plugin/allReport.js"></script>
     <style>
         .zy-line-path,
         .zy-circle {
@@ -24,307 +27,488 @@
                         "FROM_MILEAGE": 10,
                         "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
                         "RELATIVE_RISK_SCORE": 20,
-                        "TO_MILEAGE": 1000
+                        "TO_MILEAGE": 1000,
+                        "RISKYYYY":2014,
+                        "NAME_": "一门站"
                     },
                     {
                         "FROM_MILEAGE": 1000,
                         "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
                         "RELATIVE_RISK_SCORE": 30,
-                        "TO_MILEAGE": 2000
+                        "TO_MILEAGE": 2000,
+                        "RISKYYYY":2014,
+                        "NAME_": "一门站"
                     },
                     {
                         "FROM_MILEAGE": 10,
                         "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
                         "RELATIVE_RISK_SCORE": 50,
-                        "TO_MILEAGE": 1000
+                        "TO_MILEAGE": 1000,
+                        "RISKYYYY":2015,
+                        "NAME_": "二门站"
                     },
                     {
                         "FROM_MILEAGE": 1000,
                         "PIPE_LINE_ID": "51413309f906421086d6983c0b8ae5ba",
                         "RELATIVE_RISK_SCORE": 90,
-                        "TO_MILEAGE": 2000
+                        "TO_MILEAGE": 2000,
+                        "RISKYYYY":2015,
+                        "NAME_": "二门站"
                     }
                 ]
             }
         }
 
-        console.log(data);
+        var testDate = ["2014", "2015"];
+        var evalDate = data.result.riskYYYYs;
+        var level_text = [],
+            level_legend = [
+                ['暂无第二次数据', '#37a4dd'],
+                ['暂无第二次数据', '#fe8e07']
+            ];
+        var pipe_score_text = [],
+            pipe_score_legend = [
+                ['暂无第二次数据', '#37a4dd'],
+                ['暂无第二次数据', '#fe8e07']
+            ];
+        var melege_score_text = [],
+            melege_score_legend = [
+                ['暂无第二次数据', '#37a4dd'],
+                ['暂无第二次数据', '#fe8e07']
+            ];
 
-        // var settings = {
-        //     container: '',
-        //     color: ['#37a4dd', '#fe8e07'], // 线条颜色
-        //     text: ['2016年管道风险评分', '2017年管道风险评分'], // 线段名称
-        //     xAxis: { // x轴
-        //         data: [0, 2600], // x轴数据
-        //         ticks: 10, // x轴刻度数
-        //         index: [], // x轴索引
-        //         render: '', // 渲染回调函数
-        //         show: true, // 是否显示(默认true)
-        //         orient: 'bottom', // x轴方向(默认bottom)
-        //         sort: 'asc' // 刻度排序(默认上升asc)
-        //     },
-        //     yAxis: { // y轴
-        //         data: [0, 100],
-        //         ticks: 10,
-        //         index: [],
-        //         render: '',
-        //         show: true,
-        //         orient: 'left',
-        //         sort: 'asc'
-        //     },
-        //     data: [
-        //         [
-        //             [
-        //                 [10, 20],
-        //                 [1000, 20]
-        //             ],
-        //             [
-        //                 [1000, 20],
-        //                 [1000, 30]
-        //             ],
-        //             [
-        //                 [1000, 30],
-        //                 [2000, 30]
-        //             ]
-        //         ],
-        //         [
-        //             [
-        //                 [10, 50],
-        //                 [1000, 50]
-        //             ],
-        //             [
-        //                 [1000, 50],
-        //                 [1000, 90]
-        //             ],
-        //             [
-        //                 [1000, 90],
-        //                 [2500, 90]
-        //             ]
-        //         ]
-        //     ], // 原始数据集
-        //     layout: {
-        //         xtag: '绝对距离', // x轴显示文本
-        //         ytag: '评分分值', // y轴显示文本
-        //         tagColor: '#5c5c5c', //xY轴文本颜色
-        //         margin: {
-        //             left: 60,
-        //             right: 50,
-        //             top: 50,
-        //             bottom: 50
-        //         }, // 距容器边距
-        //         xgrid: true, // x轴网格
-        //         ygrid: true, // y轴网格
-        //         gridColor: '#f0f0f0', // 网格颜色
-        //         gridWidth: '1px', // 网格粗细
-        //         lineRender: 'crispEdges', // 网格线条清晰度
-        //         axisColor: '#f0f0f0', // 坐标轴颜色
-        //         axisFontColor: '#5c5c5c', // 坐标轴字体颜色
-        //         axisFontSize: '12px', // 坐标轴字体大小
-        //         lineWidth: '1.5px', // 线段宽度
-        //         lineEdges: 'default' // 线段清晰度
-        //     }, // 区间背景
-        //     pointText: {
-        //         show: false, // 节点文字是否显示(默认false不显示)
-        //         render: '', // 渲染回调函数
-        //         circle: true, // 节点圆圈是否显示(默认false不显示)
-        //         startShow: true, // 显示折线开始节点圆圈(默认false不显示)
-        //         stopShow: false // 显示折线结束节点圆圈(默认false不显示)
-        //     },
-        //     legend: {
-        //         data: [
-        //             ['2016年管道风险评分', '#37a4dd'],
-        //             ['2017年管道风险评分', '#fe8e07']
-        //         ], //标签数据
-        //         width: 170, //标签长度
-        //         location: 0 //标签所在x方向位置
-        //     }
-        // };
-        var svg = d3.select("svg"),
-            margin = {
-                top: 20,
-                right: 20,
-                bottom: 20,
-                left: 30
+        for (var x = 0; x < testDate.length; x++) {
+            if (testDate[x]) {
+                level_text.push(testDate[x] + '年风险评价结果');
+                level_legend[x][0] = testDate[x] + '年风险评价结果';
+                pipe_score_text.push(testDate[x] + '年评分');
+                pipe_score_legend[x][0] = testDate[x] + '年评分';
+                melege_score_text.push(testDate[x] + '年管道风险评分');
+                melege_score_legend[x][0] = testDate[x] + '年管道风险评分';
+            }
+        }
+
+        var pileMelegeData = data.result.list;
+
+        //获取管道ID种类,返回一个数组
+        function getIdArr(data) {
+            var result = [],
+                arr = [];
+            for (var i = 0; i < data.length; i++) {
+                if (data[i]["PIPE_LINE_ID"]) {
+                    arr.push(data[i]["PIPE_LINE_ID"]);
+                }
+            }
+            //此方法新建一个数组，循环前数组，用indexOf判断新数组里是否包含现有数组，如没有则push进新数组，有则不做任何操作！
+            for (var j = 0; j < arr.length; j++) {
+                if (result.indexOf(arr[j]) < 0) {
+                    result.push(arr[j]);
+                }
+            }
+            return result;
+        }
+        var IdArr = getIdArr(pileMelegeData);
+
+        //获取图表数据
+        function getChartData(data, idArr, timeArr) {
+            console.log(timeArr)
+            var result = [],
+                r1 = [],
+                r2 = [];
+            if (timeArr[0]) {
+                for (var y = 0; y < idArr.length; y++) {
+                    var list = [];
+                    var item = [];
+                    for (var z = 0; z < data.length; z++) {
+                        if (data[z]["PIPE_LINE_ID"] == idArr[y] && data[z]["RISKYYYY"] == timeArr[0]) {
+                            list.push([parseFloat(data[z].FROM_MILEAGE), parseFloat(data[z].RELATIVE_RISK_SCORE)], [
+                                parseFloat(data[z].TO_MILEAGE), parseFloat(data[z].RELATIVE_RISK_SCORE)
+                            ]);
+                            item = [data[z].NAME_];
+                        }
+                    }
+                    var pairs = d3.pairs(list);
+                    r1.push([pairs, item]);
+                }
+            }
+            if (timeArr[1]) {
+                for (var y = 0; y < idArr.length; y++) {
+                    var list = [];
+                    var item = [];
+                    for (var z = 0; z < data.length; z++) {
+                        if (data[z]["PIPE_LINE_ID"] == idArr[y] && data[z]["RISKYYYY"] == timeArr[1]) {
+                            list.push([parseFloat(data[z].FROM_MILEAGE), parseFloat(data[z].RELATIVE_RISK_SCORE)], [
+                                parseFloat(data[z].TO_MILEAGE), parseFloat(data[z].RELATIVE_RISK_SCORE)
+                            ]);
+                            item = [data[z].NAME_];
+                        }
+                    }
+                    var pairs = d3.pairs(list);
+                    r2.push([pairs, item]);
+                }
+            }
+
+            result = [r1, r2];
+            return result;
+        }
+
+        // dyy项目中将testData改为evalDate testDate = ["2014", "2015"];
+        var melgeChartData = getChartData(pileMelegeData, IdArr, testDate);
+        console.log(melgeChartData);
+
+        //获取图表横轴范围
+        function getXArea(data) {
+            var XScale = [],
+                FROM = [],
+                TO = [];
+            for (var s = 0; s < data.length; s++) {
+                FROM.push(data[s].FROM_MILEAGE);
+                TO.push(data[s].TO_MILEAGE);
+            }
+            XScale = [FROM, TO];
+            return XScale
+        }
+
+        var getXAreaData = getXArea(pileMelegeData);
+
+        var XArr = [];
+        if (getXAreaData.length > 0) {
+            for (var r = 0; r < getXAreaData.length; r++) {
+                for (var b = 0; b < getXAreaData[r].length; b++) {
+                    XArr.push(getXAreaData[r][b]);
+                }
+            }
+        }
+
+        //获取图表数轴范围
+        function getYArea(data) {
+            var YScale = [],
+                value = [];
+            for (var s = 0; s < data.length; s++) {
+                value.push(data[s].RELATIVE_RISK_SCORE);
+            }
+            YScale = [value]
+            return YScale
+        }
+
+        var YArr = getYArea(pileMelegeData)[0];
+
+        Xcharts.brushZoomI({
+            container: 'JQ_risk_column',
+            color: ['#37a4dd', '#fe8e07'],
+            text: melege_score_text,
+            xAxis: {
+                data: [d3.min(XArr), d3.max(XArr)], // x轴数据
+                ticks: 10 // x轴刻度数
             },
-            x0 = [0, 4000],
-            y0 = [0, 100],
-            width = +svg.attr("width"),
-            height = +svg.attr("height");
+            yAxis: {
+                data: [0, d3.max(YArr)],
+                ticks: 10
+            },
+            data: melgeChartData,
+            layout: {
+                xtag: '里程',
+                ytag: '风险分值',
+                tagColor: '#8393ad', //xY轴文本颜色
+                gridColor: '#8393ad', // 网格颜色
+                axisColor: '#8393ad', // 坐标轴颜色
+                axisFontColor: '#8393ad', // 坐标轴字体颜色
+                margin: {
+                    left: 60,
+                    right: 50,
+                    top: 50,
+                    bottom: 50
+                }
+            },
+            pointText: {
+                circle: true,
+                startShow: true
+            },
+            legend: {
+                data: melege_score_legend,
+                width: 170,
+                location: 0
+            }
+        });
+
+        var setting = {
+            container: '',
+            color: ['#37a4dd', '#fe8e07'], // 线条颜色
+            text: ['2016年管道风险评分', '2017年管道风险评分'], // 线段名称
+            xAxis: { // x轴
+                data: [0, 2600], // x轴数据
+                ticks: 10, // x轴刻度数
+                index: [], // x轴索引
+                render: '', // 渲染回调函数
+                show: true, // 是否显示(默认true)
+                orient: 'bottom', // x轴方向(默认bottom)
+                sort: 'asc' // 刻度排序(默认上升asc)
+            },
+            yAxis: { // y轴
+                data: [0, 100],
+                ticks: 10,
+                index: [],
+                render: '',
+                show: true,
+                orient: 'left',
+                sort: 'asc'
+            },
+            data: [
+                [
+                    [
+                        [10, 20],
+                        [1000, 20]
+                    ],
+                    [
+                        [1000, 20],
+                        [1000, 30]
+                    ],
+                    [
+                        [1000, 30],
+                        [2000, 30]
+                    ]
+                ],
+                [
+                    [
+                        [10, 50],
+                        [1000, 50]
+                    ],
+                    [
+                        [1000, 50],
+                        [1000, 90]
+                    ],
+                    [
+                        [1000, 90],
+                        [2500, 90]
+                    ]
+                ]
+            ], // 原始数据集
+            layout: {
+                xtag: '绝对距离', // x轴显示文本
+                ytag: '评分分值', // y轴显示文本
+                tagColor: '#5c5c5c', //xY轴文本颜色
+                margin: {
+                    left: 60,
+                    right: 50,
+                    top: 50,
+                    bottom: 50
+                }, // 距容器边距
+                xgrid: true, // x轴网格
+                ygrid: true, // y轴网格
+                gridColor: '#f0f0f0', // 网格颜色
+                gridWidth: '1px', // 网格粗细
+                lineRender: 'crispEdges', // 网格线条清晰度
+                axisColor: '#f0f0f0', // 坐标轴颜色
+                axisFontColor: '#5c5c5c', // 坐标轴字体颜色
+                axisFontSize: '12px', // 坐标轴字体大小
+                lineWidth: '1.5px', // 线段宽度
+                lineEdges: 'default' // 线段清晰度
+            }, // 区间背景
+            pointText: {
+                show: false, // 节点文字是否显示(默认false不显示)
+                render: '', // 渲染回调函数
+                circle: true, // 节点圆圈是否显示(默认false不显示)
+                startShow: true, // 显示折线开始节点圆圈(默认false不显示)
+                stopShow: false // 显示折线结束节点圆圈(默认false不显示)
+            },
+            legend: {
+                data: [
+                    ['2016年管道风险评分', '#37a4dd'],
+                    ['2017年管道风险评分', '#fe8e07']
+                ], //标签数据
+                width: 170, //标签长度
+                location: 0 //标签所在x方向位置
+            }
+        };
+
+        console.log(setting.data);
+
+        // var svg = d3.select("svg"),
+        //     margin = {
+        //         top: 20,
+        //         right: 20,
+        //         bottom: 20,
+        //         left: 30
+        //     },
+        //     x0 = [0, 4000],
+        //     y0 = [0, 100],
+        //     width = +svg.attr("width"),
+        //     height = +svg.attr("height");
 
 
         // 创建x和y轴的线性比例尺
-        var xScale = d3.scaleLinear().range([0, width]).domain(x0).nice(10),
-            yScale = d3.scaleLinear().range([height, 0]).domain(y0);
+        // var xScale = d3.scaleLinear().range([0, width]).domain(x0).nice(10),
+        //     yScale = d3.scaleLinear().range([height, 0]).domain(y0);
 
 
         // 创建隐藏框
-        svg.append("defs").append("clipPath")
-            .attr("id", "clip");
+        // svg.append("defs").append("clipPath")
+        //     .attr("id", "clip");
 
         // 创建x轴和y轴
-        var xAxis = d3.axisTop(xScale),
-            yAxis = d3.axisRight(yScale);
+        // var xAxis = d3.axisTop(xScale),
+        //     yAxis = d3.axisRight(yScale);
 
         // 创建g
-        var g = svg.append("g")
-            .attr("transform", "translate(0,0)");
+        // var g = svg.append("g")
+        //     .attr("transform", "translate(0,0)");
         // 实例化x轴        
-        svg.append("g")
-            .attr("class", "axis axis--x")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-        // 实例化y轴
-        svg.append("g")
-            // .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .attr("class", "axis axis--y")
-            .call(yAxis);
+        // svg.append("g")
+        //     .attr("class", "axis axis--x")
+        //     .attr("transform", "translate(0," + height + ")")
+        //     .call(xAxis);
+        // // 实例化y轴
+        // svg.append("g")
+        //     // .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        //     .attr("class", "axis axis--y")
+        //     .call(yAxis);
 
-        svg.selectAll(".domain")
-            .attr("display", "none");
+        // svg.selectAll(".domain")
+        //     .attr("display", "none");
 
-        /*--------- 添加折线 - start ---------*/
-        var line = d3.line()
-            .curve(d3.curveMonotoneX)
-            .x(function (d) {
-                return xScale(d[0]);
-            })
-            .y(function (d) {
-                return yScale(d[1]);
-            });
+        // /*--------- 添加折线 - start ---------*/
+        // var line = d3.line()
+        //     .curve(d3.curveMonotoneX)
+        //     .x(function (d) {
+        //         return xScale(d[0]);
+        //     })
+        //     .y(function (d) {
+        //         return yScale(d[1]);
+        //     });
 
-        function returnValue(arr) {
-            if (arr[0][0] == arr[1][0]) {
-                return "";
-            } else {
-                return arr[0][1];
-            }
-        }
+        // function returnValue(arr) {
+        //     if (arr[0][0] == arr[1][0]) {
+        //         return "";
+        //     } else {
+        //         return arr[0][1];
+        //     }
+        // }
 
-        // 多条
-        if (settings.data.length > 0) {
-            for (var h = 0; h < settings.data.length; h++) {
-                for (var i = 0, len = settings.data[h].length; i < len; i++) {
-                    console.log();
-                    g.append('path')
-                        .attr('class', 'zy-line-path')
-                        .attr('transform', 'translate(0,0)')
-                        .attr('d', line(settings.data[h][i]))
-                        .attr('stroke', settings.color[h])
-                        .attr('fill', 'none')
-                        .attr('data', settings.data[h][i])
-                        // .attr('data-text', returnText(settings.text[h], settings.data[h][i]))
-                        .attr('data-value', returnValue(settings.data[h][i]))
-                        .attr('stroke-width', settings.layout.lineWidth)
-                        .attr('shape-rendering', settings.layout.lineEdges)
-                        .on('mousemove', function () {
-                            if (d3.select(this).attr('data-value')) {
-                                d3.select(this)
-                                    .attr('stroke-width', 4);
-                                // showTip(true, d3.event, d3.select(this));
-                            }
-                        })
-                        .on('mouseout', function () {
-                            if (d3.select(this).attr('data-value')) {
-                                d3.select(this)
-                                    .attr('stroke-width', settings.layout.lineWidth);
-                                //									  showTip(false);
-                            }
-                        });
-                }
-            }
-        }
+        // // 多条
+        // if (settings.data.length > 0) {
+        //     for (var h = 0; h < settings.data.length; h++) {
+        //         for (var i = 0, len = settings.data[h].length; i < len; i++) {
+        //             console.log();
+        //             g.append('path')
+        //                 .attr('class', 'zy-line-path')
+        //                 .attr('transform', 'translate(0,0)')
+        //                 .attr('d', line(settings.data[h][i]))
+        //                 .attr('stroke', settings.color[h])
+        //                 .attr('fill', 'none')
+        //                 .attr('data', settings.data[h][i])
+        //                 // .attr('data-text', returnText(settings.text[h], settings.data[h][i]))
+        //                 .attr('data-value', returnValue(settings.data[h][i]))
+        //                 .attr('stroke-width', settings.layout.lineWidth)
+        //                 .attr('shape-rendering', settings.layout.lineEdges)
+        //                 .on('mousemove', function () {
+        //                     if (d3.select(this).attr('data-value')) {
+        //                         d3.select(this)
+        //                             .attr('stroke-width', 4);
+        //                         // showTip(true, d3.event, d3.select(this));
+        //                     }
+        //                 })
+        //                 .on('mouseout', function () {
+        //                     if (d3.select(this).attr('data-value')) {
+        //                         d3.select(this)
+        //                             .attr('stroke-width', settings.layout.lineWidth);
+        //                         //									  showTip(false);
+        //                     }
+        //                 });
+        //         }
+        //     }
+        // }
 
-        // 多点
-        if (settings.data.length > 0) {
-            for (var k = 0; k < settings.data.length; k++) {
-                if (settings.pointText.circle) {
-                    // 单组
-                    if (settings.data[k].length > 0) {
-                        for (var j = 0, len_j = settings.data[k].length; j < len_j; j++) {
-                            g.append('g')
-                                .attr('class', 'zy-circle-all')
-                                //.attr('transform', 'translate(' + settings.layout.margin.left + ',' + settings.layout.margin.top + ')')
-                                .selectAll('circle')
-                                .data(settings.data[k][j])
-                                .enter()
-                                .append('circle')
-                                .attr('class', 'zy-circle')
-                                .attr('data', settings.data[k][j])
-                                .attr('cx', line.x())
-                                .attr('cy', line.y())
-                                .attr('r', 3)
-                                .attr('stroke', settings.color[k])
-                                .attr('fill', '#ffffff')
-                                .attr('stroke-width', '1.5px');
-                        }
-                    }
-                }
-            }
-        }
+        // // 多点
+        // if (settings.data.length > 0) {
+        //     for (var k = 0; k < settings.data.length; k++) {
+        //         if (settings.pointText.circle) {
+        //             // 单组
+        //             if (settings.data[k].length > 0) {
+        //                 for (var j = 0, len_j = settings.data[k].length; j < len_j; j++) {
+        //                     g.append('g')
+        //                         .attr('class', 'zy-circle-all')
+        //                         //.attr('transform', 'translate(' + settings.layout.margin.left + ',' + settings.layout.margin.top + ')')
+        //                         .selectAll('circle')
+        //                         .data(settings.data[k][j])
+        //                         .enter()
+        //                         .append('circle')
+        //                         .attr('class', 'zy-circle')
+        //                         .attr('data', settings.data[k][j])
+        //                         .attr('cx', line.x())
+        //                         .attr('cy', line.y())
+        //                         .attr('r', 3)
+        //                         .attr('stroke', settings.color[k])
+        //                         .attr('fill', '#ffffff')
+        //                         .attr('stroke-width', '1.5px');
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
-        // 创建笔刷
-        var brush = d3.brush().on("end", brushended),
-            idleTimeout,
-            idleDelay = 350;
+        // // 创建笔刷
+        // var brush = d3.brush().on("end", brushended),
+        //     idleTimeout,
+        //     idleDelay = 350;
 
-        // 实例化笔刷
-        svg.append("g")
-            .attr("class", "brush")
-            .call(brush);
+        // // 实例化笔刷
+        // svg.append("g")
+        //     .attr("class", "brush")
+        //     .call(brush);
 
-        function brushended() {
-            var s = d3.event.selection;
-            if (!s) {
-                if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
-                xScale.domain(x0);
-                yScale.domain(y0);
-            } else {
-                xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
-                yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
-                svg.select(".brush").call(brush.move, null);
-            }
-            zoomed();
-        }
+        // function brushended() {
+        //     var s = d3.event.selection;
+        //     if (!s) {
+        //         if (!idleTimeout) return idleTimeout = setTimeout(idled, idleDelay);
+        //         xScale.domain(x0);
+        //         yScale.domain(y0);
+        //     } else {
+        //         xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
+        //         yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
+        //         svg.select(".brush").call(brush.move, null);
+        //     }
+        //     zoomed();
+        // }
 
-        function idled() {
-            idleTimeout = null;
-        }
+        // function idled() {
+        //     idleTimeout = null;
+        // }
 
-        function zoomed() {
-            var t = d3.event.transform;
-            // var t = svg.transition().duration(750);
-            svg.select(".axis--x").transition(t).call(xAxis);
-            svg.select(".axis--y").transition(t).call(yAxis);
+        // function zoomed() {
+        //     var t = d3.event.transform;
+        //     // var t = svg.transition().duration(750);
+        //     svg.select(".axis--x").transition(t).call(xAxis);
+        //     svg.select(".axis--y").transition(t).call(yAxis);
 
-            var line = d3.line()
-                .curve(d3.curveMonotoneX)
-                .x(function (d) {
-                    return xScale(d[0]);
-                })
-                .y(function (d) {
-                    return yScale(d[1]);
-                });
+        //     var line = d3.line()
+        //         .curve(d3.curveMonotoneX)
+        //         .x(function (d) {
+        //             return xScale(d[0]);
+        //         })
+        //         .y(function (d) {
+        //             return yScale(d[1]);
+        //         });
 
-            g.selectAll(".zy-line-path").transition(t).attr("d", function (d) {
-                var x = d3.select(this)
-                    .attr('data');
-                x = x.split(',');
-                var arr = [
-                    [parseFloat(x[0]), parseFloat(x[1])],
-                    [parseFloat(x[2]), parseFloat(x[3])]
-                ];
-                var val = line(arr);
-                return val;
-            });
+        //     g.selectAll(".zy-line-path").transition(t).attr("d", function (d) {
+        //         var x = d3.select(this)
+        //             .attr('data');
+        //         x = x.split(',');
+        //         var arr = [
+        //             [parseFloat(x[0]), parseFloat(x[1])],
+        //             [parseFloat(x[2]), parseFloat(x[3])]
+        //         ];
+        //         var val = line(arr);
+        //         return val;
+        //     });
 
-            g.selectAll(".zy-circle").transition(t)
-                .attr("cx", function (d) {
-                    return xScale(d[0]);
-                })
-                .attr("cy", function (d) {
-                    return yScale(d[1]);
-                });;
-        }
+        //     g.selectAll(".zy-circle").transition(t)
+        //         .attr("cx", function (d) {
+        //             return xScale(d[0]);
+        //         })
+        //         .attr("cy", function (d) {
+        //             return yScale(d[1]);
+        //         });;
+        // }
     </script>
 </body>
 

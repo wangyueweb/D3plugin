@@ -1485,34 +1485,38 @@ var Xcharts = (function () {
 
         // 多条
         if (settings.data.length > 0) {
+
             for (var h = 0; h < settings.data.length; h++) {
+
                 for (var i = 0, len = settings.data[h].length; i < len; i++) {
-                    console.log();
-                    g.append('path')
-                        .attr('class', 'zy-line-path')
-                        .attr('transform', 'translate(0,0)')
-                        .attr('d', line(settings.data[h][i]))
-                        .attr('stroke', settings.color[h])
-                        .attr('fill', 'none')
-                        .attr('data', settings.data[h][i])
-                        // .attr('data-text', returnText(settings.text[h], settings.data[h][i]))
-                        .attr('data-value', returnValue(settings.data[h][i]))
-                        .attr('stroke-width', settings.layout.lineWidth)
-                        .attr('shape-rendering', settings.layout.lineEdges)
-                        .on('mousemove', function () {
-                            if (d3.select(this).attr('data-value')) {
-                                d3.select(this)
-                                    .attr('stroke-width', 4);
-                                // showTip(true, d3.event, d3.select(this));
-                            }
-                        })
-                        .on('mouseout', function () {
-                            if (d3.select(this).attr('data-value')) {
-                                d3.select(this)
-                                    .attr('stroke-width', settings.layout.lineWidth);
-                                //									  showTip(false);
-                            }
-                        });
+
+                    for (var j = 0; j < settings.data[h][0][0].length; j++) {
+                        g.append('path')
+                            .attr('class', 'zy-line-path')
+                            .attr('transform', 'translate(0,0)')
+                            .attr('d', line(settings.data[h][0][0][j]))
+                            .attr('stroke', settings.color[h])
+                            .attr('fill', 'none')
+                            .attr('data', settings.data[h][0][0][j])
+                            // .attr('data-text', returnText(settings.text[h], settings.data[h][i]))
+                            .attr('data-value', returnValue(settings.data[h][0][0][j]))
+                            .attr('stroke-width', settings.layout.lineWidth)
+                            .attr('shape-rendering', settings.layout.lineEdges)
+                            .on('mousemove', function () {
+                                if (d3.select(this).attr('data-value')) {
+                                    d3.select(this)
+                                        .attr('stroke-width', 4);
+                                    // showTip(true, d3.event, d3.select(this));
+                                }
+                            })
+                            .on('mouseout', function () {
+                                if (d3.select(this).attr('data-value')) {
+                                    d3.select(this)
+                                        .attr('stroke-width', settings.layout.lineWidth);
+                                    //									  showTip(false);
+                                }
+                            });
+                    }
                 }
             }
         }
@@ -1524,21 +1528,24 @@ var Xcharts = (function () {
                     // 单组
                     if (settings.data[k].length > 0) {
                         for (var j = 0, len_j = settings.data[k].length; j < len_j; j++) {
-                            g.append('g')
-                                .attr('class', 'zy-circle-all')
-                                //.attr('transform', 'translate(' + settings.layout.margin.left + ',' + settings.layout.margin.top + ')')
-                                .selectAll('circle')
-                                .data(settings.data[k][j])
-                                .enter()
-                                .append('circle')
-                                .attr('class', 'zy-circle')
-                                .attr('data', settings.data[k][j])
-                                .attr('cx', line.x())
-                                .attr('cy', line.y())
-                                .attr('r', 3)
-                                .attr('stroke', settings.color[k])
-                                .attr('fill', '#ffffff')
-                                .attr('stroke-width', '1.5px');
+                            for (var m = 0, len_m = settings.data[k][j][0].length; m < len_m; m++) {
+                                console.log(settings.data[k][j][0][m])
+                                g.append('g')
+                                    .attr('class', 'zy-circle-all')
+                                    //.attr('transform', 'translate(' + settings.layout.margin.left + ',' + settings.layout.margin.top + ')')
+                                    .selectAll('circle')
+                                    .data(settings.data[k][j][0][m])
+                                    .enter()
+                                    .append('circle')
+                                    .attr('class', 'zy-circle')
+                                    .attr('data', settings.data[k][j][0][m])
+                                    .attr('cx', line.x())
+                                    .attr('cy', line.y())
+                                    .attr('r', 3)
+                                    .attr('stroke', settings.color[k])
+                                    .attr('fill', '#ffffff')
+                                    .attr('stroke-width', '1.5px');
+                            }
                         }
                     }
                 }
