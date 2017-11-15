@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
+    <script src="./d3plugin/d3.js"></script>
+    <script src="./d3plugin/reportD3.plugin.js"></script>
+    <script src="./d3plugin/allReport.js"></script>
+    <title>segmentTwo多条线段分割数据统计图（两条数据以上）</title>
+    <style>
+        #JQ_risk_column {
+            height: 460px;
+        }
+
+        .zy-d3-tip {
+            position: absolute;
+            z-index: 11;
+            left: 0;
+            top: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 12px;
+            padding: 5px 7px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="JQ_risk_column"></div>
+    <script>
+        var data = {
+            "bool": true,
+            "message": "",
+            "needFormat_": "need",
+            "result": {
+                "highRiskProportion": "23.29 %",
+                "relativeRiskScoreMapList": [{
+                    "FROM_MILEAGE": 0,
+                    "NAME_": "二门站-太平清管站",
+                    "PIPE_LINE_ID": "1b03ac0b7e8e4f458b1084ee32dfdd5c",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 20,
+                    "RISKYYYY": "2016",
+                    "TO_MILEAGE": 39894.639
+                }, {
+                    "FROM_MILEAGE": 17.194,
+                    "NAME_": "郭巷支线",
+                    "PIPE_LINE_ID": "23f6572977ba415d84201f74934f8404",
+                    "RANK_1": 1,
+                    "RELATIVE_RISK_SCORE": 30.01,
+                    "RISKYYYY": "2017",
+                    "TO_MILEAGE": 80.048
+                }],
+                "riskAssessmentList": [{
+                    "customNumber": "ET001",
+                    "evaluateName": "二门风险管线",
+                    "evaluateScore": "2016:20"
+                }, {
+                    "customNumber": "FXPJ-GX20170330",
+                    "evaluateName": "石羊立交风险段",
+                    "evaluateScore": "2017:30.01"
+                }],
+                "riskGradeList": [{
+                    "countNum": "2016:40.095263,2017:62.81225433",
+                    "gradeName": "中"
+                }],
+                "riskYYYYs": ["2017", "2016"]
+            }
+        }
+        var testDate = ["2016", "2017"];
+        var evalDate = data.result.riskYYYYs;
+        var level_text = [],
+            level_legend = [
+                ['暂无第二次数据', '#37a4dd'],
+                ['暂无第二次数据', '#fe8e07']
+            ];
+        var pipe_score_text = [],
+            pipe_score_legend = [
+                ['暂无第二次数据', '#37a4dd'],
+                ['暂无第二次数据', '#fe8e07']
+            ];
+        var melege_score_text = [],
+            melege_score_legend = [
+                ['暂无第二次数据', '#37a4dd'],
+                ['暂无第二次数据', '#fe8e07']
+            ];
+
+        for (var x = 0; x < testDate.length; x++) {
+            if (testDate[x]) {
+                level_text.push(testDate[x] + '年风险评价结果');
+                level_legend[x][0] = testDate[x] + '年风险评价结果';
+                pipe_score_text.push(testDate[x] + '年评分');
+                pipe_score_legend[x][0] = testDate[x] + '年评分';
+                melege_score_text.push(testDate[x] + '年管道风险评分');
+                melege_score_legend[x][0] = testDate[x] + '年管道风险评分';
+            }
+        }
+
+
+        var pileMelegeData = data.result.relativeRiskScoreMapList;
+
+        if (pileMelegeData && pileMelegeData.length) {
+            var scoreArr1 = [],
+                XArr = [],
+                scoreArr2 = [],
+                YArr = [];
+            for (var d = 0; d < pileMelegeData.length; d++) {
+                var val_d = pileMelegeData[d].RELATIVE_RISK_SCORE ? parseFloat(pileMelegeData[d].RELATIVE_RISK_SCORE) :
+                    0;
+                // dyy项目中将testData改为evalDate testData = ["2016", "2017"]
+                if (pileMelegeData[d].RISKYYYY == testDate[0]) {
+                    scoreArr1.push([parseFloat(pileMelegeData[d].FROM_MILEAGE), val_d]);
+                    scoreArr1.push([parseFloat(pileMelegeData[d].TO_MILEAGE), parseFloat(val_d)]);
+                }
+
+                // dyy项目中将testData改为evalDate testData = ["2016", "2017"]
+                if (pileMelegeData[d].RISKYYYY == testDate[1]) {
+                    scoreArr2.push([parseFloat(pileMelegeData[d].FROM_MILEAGE), val_d]);
+                    scoreArr2.push([parseFloat(pileMelegeData[d].TO_MILEAGE), val_d]);
+                }
+                YArr.push(val_d);
+                XArr.push(parseFloat(pileMelegeData[d].FROM_MILEAGE), parseFloat(pileMelegeData[d].TO_MILEAGE));
+            }
+            var arr_d1 = d3.pairs(scoreArr1);
+            var arr_d2 = d3.pairs(scoreArr2);
+            melgeChartData = [arr_d1, arr_d2];
+        } else {
+            melgeChartData.legth = 0;
+        }
+
+        Xcharts.segmentTwo({
+            container: 'JQ_risk_column',
+            color: ['#37a4dd', '#fe8e07'],
+            text: melege_score_text,
+            xAxis: {
+                data: [d3.min(XArr), d3.max(XArr)], // x轴数据
+                ticks: 10 // x轴刻度数
+            },
+            yAxis: {
+                data: [0, d3.max(YArr)],
+                ticks: 10
+            },
+            data: melgeChartData,
+            layout: {
+                xtag: '里程',
+                ytag: '风险分值',
+                tagColor: '#8393ad', //xY轴文本颜色
+                gridColor: '#8393ad', // 网格颜色
+                axisColor: '#8393ad', // 坐标轴颜色
+                axisFontColor: '#8393ad', // 坐标轴字体颜色
+                margin: {
+                    left: 60,
+                    right: 50,
+                    top: 50,
+                    bottom: 50
+                }
+            },
+            pointText: {
+                circle: true,
+                startShow: true
+            },
+            legend: {
+                data: melege_score_legend,
+                width: 170,
+                location: 0
+            }
+        });
+    </script>
+</body>
+
+</html>
