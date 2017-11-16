@@ -1426,15 +1426,20 @@ var Xcharts = (function () {
             return false;
         }
 
-        var svg = d3.select("svg"),
-            margin = {
+        // d3
+        var svg = d3.select('#' + settings.container)
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height);
+        
+        var margin = {
                 top: 20,
                 right: 20,
                 bottom: 20,
                 left: 30
             },
-            x0 = [0, 4000],
-            y0 = [0, 100],
+            x0 = settings.xAxis.data,
+            y0 = settings.yAxis.data,
             width = +svg.attr("width"),
             height = +svg.attr("height");
 

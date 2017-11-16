@@ -9,6 +9,9 @@
     <script src="./d3plugin/reportD3.plugin.js"></script>
     <script src="./d3plugin/allReport.js"></script>
     <style>
+        #JQ_risk_column {
+            height: 460px;
+        }
         .zy-line-path,
         .zy-circle {
             /* clip-path: url(#clip); */
@@ -19,7 +22,7 @@
 
 <body>
     <div id="JQ_risk_column"></div>
-    <svg width="960" height="500" style="margin: 50px 100px;"></svg>
+    <!-- <svg width="960" height="500" style="margin: 50px 100px;"></svg>        -->
     <script>
         var data = {
             "result": {
@@ -168,12 +171,12 @@
         }
 
         var getXAreaData = getXArea(pileMelegeData);
-
         var XArr = [];
         if (getXAreaData.length > 0) {
             for (var r = 0; r < getXAreaData.length; r++) {
                 for (var b = 0; b < getXAreaData[r].length; b++) {
                     XArr.push(getXAreaData[r][b]);
+                    console.log(XArr)
                 }
             }
         }
@@ -190,6 +193,7 @@
         }
 
         var YArr = getYArea(pileMelegeData)[0];
+        console.log(YArr)
 
         Xcharts.brushZoomI({
             container: 'JQ_risk_column',
