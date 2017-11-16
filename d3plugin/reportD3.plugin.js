@@ -1620,7 +1620,5 @@ var Xcharts = (function () {
         }
     }
 
-    
-
     return charts;
 })();
