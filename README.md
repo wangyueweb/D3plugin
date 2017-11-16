@@ -6,5 +6,5 @@ ring.html
 ![image](https://github.com/wangyueweb/D3plugin/blob/master/PreviewIMG/ring.png)
 brushZoomI.html
 ![image](https://github.com/wangyueweb/D3plugin/blob/master/PreviewIMG/brushZoomI.png)
-brushZoomII.html
+brushZoomII.html    绘制区域图，因跨域需要在html-server下启动，支持笔刷brush（区域）放大缩小功能（目前仅仅限于csv时间参数变化）
 ![image](https://github.com/wangyueweb/D3plugin/blob/master/PreviewIMG/brushZoomII.png)
