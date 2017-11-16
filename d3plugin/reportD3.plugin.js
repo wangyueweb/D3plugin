@@ -1322,7 +1322,7 @@ var Xcharts = (function () {
     /**
      * 绘制折线图，支持笔刷brush（区域）放大缩小功能，至少一条相同id数据
      * @param config 
-     */ 
+     */
     charts.brushZoomI = function (config) {
         var defaults = {
             container: '',
@@ -1428,10 +1428,10 @@ var Xcharts = (function () {
 
         // d3
         var svg = d3.select('#' + settings.container)
-        .append('svg')
-        .attr('width', width)
-        .attr('height', height);
-        
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height);
+
         var margin = {
                 top: 20,
                 right: 20,
@@ -1622,6 +1622,380 @@ var Xcharts = (function () {
                 .attr("cy", function (d) {
                     return yScale(d[1]);
                 });;
+        }
+    }
+
+    /**
+     * 折线绘制图，burshZoomII升级版，可根据需要拼接数组数据，支持笔刷brush（区域）放大缩小功能
+     * @param config
+     */
+    charts.brushZoomIII = function (config) {
+        var defaults = {
+            container: '',
+            color: ['#37a4dd', '#fe8e07'], // 线条颜色
+            text: ['2016年管道风险评分', '2017年管道风险评分'], // 线段名称
+            xAxis: { // x轴
+                data: [0, 2600], // x轴数据
+                ticks: 10, // x轴刻度数
+                index: [], // x轴索引
+                render: '', // 渲染回调函数
+                show: true, // 是否显示(默认true)
+                orient: 'bottom', // x轴方向(默认bottom)
+                sort: 'asc' // 刻度排序(默认上升asc)
+            },
+            yAxis: { // y轴
+                data: [0, 100],
+                ticks: 10,
+                index: [],
+                render: '',
+                show: true,
+                orient: 'left',
+                sort: 'asc'
+            },
+            data: [
+                [
+                    [
+                        [10, 20],
+                        [1000, 20]
+                    ],
+                    [
+                        [1000, 20],
+                        [1000, 30]
+                    ],
+                    [
+                        [1000, 30],
+                        [2000, 30]
+                    ]
+                ],
+                [
+                    [
+                        [10, 50],
+                        [1000, 50]
+                    ],
+                    [
+                        [1000, 50],
+                        [1000, 90]
+                    ],
+                    [
+                        [1000, 90],
+                        [2500, 90]
+                    ]
+                ]
+            ], // 原始数据集
+            layout: {
+                xtag: '绝对距离', // x轴显示文本
+                ytag: '评分分值', // y轴显示文本
+                tagColor: '#5c5c5c', //xY轴文本颜色
+                margin: {
+                    left: 60,
+                    right: 50,
+                    top: 50,
+                    bottom: 50
+                }, // 距容器边距
+                xgrid: true, // x轴网格
+                ygrid: true, // y轴网格
+                gridColor: '#f0f0f0', // 网格颜色
+                gridWidth: '1px', // 网格粗细
+                lineRender: 'crispEdges', // 网格线条清晰度
+                axisColor: '#f0f0f0', // 坐标轴颜色
+                axisFontColor: '#5c5c5c', // 坐标轴字体颜色
+                axisFontSize: '12px', // 坐标轴字体大小
+                lineWidth: '1.5px', // 线段宽度
+                lineEdges: 'default' // 线段清晰度
+            }, // 区间背景
+            pointText: {
+                show: false, // 节点文字是否显示(默认false不显示)
+                render: '', // 渲染回调函数
+                circle: true, // 节点圆圈是否显示(默认false不显示)
+                startShow: true, // 显示折线开始节点圆圈(默认false不显示)
+                stopShow: false // 显示折线结束节点圆圈(默认false不显示)
+            },
+            legend: {
+                data: [
+                    ['2016年管道风险评分', '#37a4dd'],
+                    ['2017年管道风险评分', '#fe8e07']
+                ], //标签数据
+                width: 170, //标签长度
+                location: 0 //标签所在x方向位置
+            }
+        };
+
+        var settings = extend(defaults, config);
+
+        var area = getDomArea(settings.container);
+
+        var width = area.width,
+            height = area.height;
+
+        if (settings.data.length === 0) {
+            d3.select('#' + settings.container).html(viewCon.emptyInfo);
+            return false;
+        }
+        // d3
+        var svg = d3.select('#' + settings.container)
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height);
+
+        var margin1 = {
+                top: 20,
+                right: 20,
+                bottom: 110,
+                left: 40
+            },
+            margin2 = {
+                top: 380,
+                right: 20,
+                bottom: 30,
+                left: 40
+            },
+            w1 = +svg.attr("width") - margin1.left - margin1.right,
+            h1 = +svg.attr("height") - margin1.top - margin1.bottom,
+            h2 = +svg.attr("height") - margin2.top - margin2.bottom;
+        console.log(w1)
+        console.log(height)
+        console.log(svg.attr("height") - margin2.bottom)
+
+        // 创建x和y轴的线性比例尺
+        var xScale = d3.scaleLinear().range([0, w1]).domain([0, 8000]).nice(10),
+            yScale = d3.scaleLinear().range([h1, 0]).domain([0, 100]),
+            x2 = d3.scaleLinear().range([0, w1]).domain([0, 8000]).nice(10),
+            y2 = d3.scaleLinear().range([h2, 0]).domain([0, 100]);
+
+
+        // 创建隐藏框
+        svg.append("defs").append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", w1)
+            .attr("height", h1);
+
+        // 创建x轴和y轴
+        var xAxis = d3.axisBottom(xScale),
+            yAxis = d3.axisLeft(yScale),
+            xAxis2 = d3.axisBottom(x2);
+        // 创建笔刷
+        var brush = d3.brushX()
+            .extent([
+                [0, 0],
+                [w1, h2]
+            ])
+            .on("brush end", brushed);
+
+        var zoom = d3.zoom()
+            .scaleExtent([1, Infinity])
+            .translateExtent([
+                [0, 0],
+                [w1, h1]
+            ])
+            .extent([
+                [0, 0],
+                [w1, h1]
+            ])
+            .on("zoom", zoomed);
+        /*--------- 添加折线 - start ---------*/
+        var line = d3.line()
+            .curve(d3.curveMonotoneX)
+            .x(function (d) {
+                return xScale(d[0]);
+            })
+            .y(function (d) { //y1
+                return yScale(d[1]);
+            });
+
+        var line2 = d3.line()
+            .curve(d3.curveMonotoneX)
+            .x(function (d) {
+                return x2(d[0]);
+            })
+            .y(function (d) { //y1
+                return y2(d[1]);
+            });
+        // 创建g
+        var focus = svg.append("g")
+            .attr("class", "focus")
+            .attr("transform", "translate(" + margin1.left + "," + margin1.top + ")");
+        // 实例化x轴 
+        focus.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + h1 + ")")
+            .call(xAxis);
+        // 实例化y轴 
+        focus.append("g")
+            .attr("class", "axis axis--y")
+            .call(yAxis);
+        // 创建缩略图
+        var context = svg.append("g")
+            .attr("class", "context")
+            .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+        // 实例化缩略图
+        context.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", "translate(0," + h2 + ")")
+            .call(xAxis2);
+
+        context.append("g")
+            .attr("class", "brush")
+            .call(brush)
+            .call(brush.move, xScale.range());
+
+        svg.append("rect")
+            .attr("class", "zoom")
+            .attr("width", w1)
+            .attr("height", h1)
+            .attr("transform", "translate(" + margin1.left + "," + margin1.top + ")")
+            .call(zoom);
+
+        function returnValue(arr) {
+            if (arr[0][0] == arr[1][0]) {
+                return "";
+            } else {
+                return arr[0][1];
+            }
+        }
+        // 多条
+        if (settings.data.length > 0) {
+            for (var h = 0; h < settings.data.length; h++) {
+                for (var i = 0, len = settings.data[h].length; i < len; i++) {
+                    console.log();
+                    focus.append('path')
+                        .attr('class', 'zy-line-path')
+                        .attr('transform', 'translate(0,0)')
+                        .attr('d', line(settings.data[h][i]))
+                        .attr('stroke', settings.color[h])
+                        .attr('fill', 'none')
+                        .attr('data', settings.data[h][i])
+                        // .attr('data-text', returnText(settings.text[h], settings.data[h][i]))
+                        .attr('data-value', returnValue(settings.data[h][i]))
+                        .attr('stroke-width', settings.layout.lineWidth)
+                        .attr('shape-rendering', settings.layout.lineEdges)
+                        .on('mousemove', function () {
+                            if (d3.select(this).attr('data-value')) {
+                                d3.select(this)
+                                    .attr('stroke-width', 4);
+                                // showTip(true, d3.event, d3.select(this));
+                            }
+                        })
+                        .on('mouseout', function () {
+                            if (d3.select(this).attr('data-value')) {
+                                d3.select(this)
+                                    .attr('stroke-width', settings.layout.lineWidth);
+                                //									  showTip(false);
+                            }
+                        });
+                    context.append('path')
+                        .attr('class', 'zy-line-path')
+                        .attr('transform', 'translate(0,0)')
+                        .attr('d', line2(settings.data[h][i]))
+                        .attr('stroke', settings.color[h])
+                        .attr('fill', 'none')
+                        .attr('data', settings.data[h][i])
+                        .attr('data-value', returnValue(settings.data[h][i]))
+                        .attr('stroke-width', settings.layout.lineWidth)
+                        .attr('shape-rendering', settings.layout.lineEdges)
+                }
+            }
+        }
+        // 多点
+        if (settings.data.length > 0) {
+            for (var k = 0; k < settings.data.length; k++) {
+                if (settings.pointText.circle) {
+                    // 单组
+                    if (settings.data[k].length > 0) {
+                        for (var j = 0, len_j = settings.data[k].length; j < len_j; j++) {
+                            focus.append('g')
+                                .attr('class', 'zy-circle-all')
+                                //.attr('transform', 'translate(' + settings.layout.margin.left + ',' + settings.layout.margin.top + ')')
+                                .selectAll('circle')
+                                .data(settings.data[k][j])
+                                .enter()
+                                .append('circle')
+                                .attr('class', 'zy-circle')
+                                .attr('data', settings.data[k][j])
+                                .attr('cx', line.x())
+                                .attr('cy', line.y())
+                                .attr('r', 3)
+                                .attr('stroke', settings.color[k])
+                                .attr('fill', '#ffffff')
+                                .attr('stroke-width', '1.5px');
+                            context.append('g')
+                                .attr('class', 'zy-circle-all')
+                                //.attr('transform', 'translate(' + settings.layout.margin.left + ',' + settings.layout.margin.top + ')')
+                                .selectAll('circle')
+                                .data(settings.data[k][j])
+                                .enter()
+                                .append('circle')
+                                .attr('class', 'zy-circle')
+                                .attr('data', settings.data[k][j])
+                                .attr('cx', line2.x())
+                                .attr('cy', line2.y())
+                                .attr('r', 3)
+                                .attr('stroke', settings.color[k])
+                                .attr('fill', '#ffffff')
+                                .attr('stroke-width', '1.5px');
+                        }
+                    }
+                }
+            }
+        }
+        var brush = d3.brushX()
+            .extent([
+                [0, 0],
+                [w1, h2]
+            ])
+        // .on("brush end", brushed);
+
+        var zoom = d3.zoom()
+            .scaleExtent([1, Infinity])
+            .translateExtent([
+                [0, 0],
+                [w1, h1]
+            ])
+            .extent([
+                [0, 0],
+                [w1, h1]
+            ])
+            .on("zoom", zoomed);
+
+        function brushed() {
+            if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
+            var s = d3.event.selection || x2.range();
+            svg.select(".zoom").call(zoom.transform, d3.zoomIdentity
+                .scale(width / (s[1] - s[0]))
+                .translate(-s[0], 0));
+        }
+
+        function zoomed() {
+            if (d3.event.sourceEvent && d3.event.sourceEvent.type === "brush") return; // ignore zoom-by-brush
+            var t = d3.event.transform,
+                xt = t.rescaleX(xScale);
+            context.select(".brush").call(brush.move, xScale.range().map(t.invertX, t));
+            var lineT = d3.line()
+                .curve(d3.curveMonotoneX)
+                .x(function (d) {
+                    return xt(d[0]);
+                })
+                .y(function (d) {
+                    return yScale(d[1]);
+                });
+
+            focus.selectAll(".zy-line-path").attr("d", function (d) {
+                var x = d3.select(this)
+                    .attr('data');
+                x = x.split(',');
+                var arr = [
+                    [parseFloat(x[0]), parseFloat(x[1])],
+                    [parseFloat(x[2]), parseFloat(x[3])]
+                ];
+                var val = lineT(arr);
+                return val;
+            });
+
+            focus.selectAll(".zy-circle").attr("cx", function (d) {
+                return xt(d[0]);
+            });
+
+            focus.select(".axis--x").call(xAxis.scale(xt));
         }
     }
 

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>放大平移缩小(放大到域)</title>
+    <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
+    <script src="./d3plugin/d3.js"></script>
+    <script src="./d3plugin/reportD3.plugin.js"></script>
+    <script src="./d3plugin/allReport.js"></script>
+    <title>burshZoomIII折线绘制图，burshZoomII升级版，可根据需要拼接数组数据，支持笔刷brush（区域）放大缩小功能</title>
+    <style>
+        #JQ_risk_column {
+            height: 460px;
+        }
+        .zy-line-path,
+        .zy-circle-all {
+            fill: steelblue;
+            clip-path: url(#clip);
+        }
+        .zoom {
+            cursor: move;
+            fill: none;
+            pointer-events: all;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="JQ_risk_column"></div>
+    <script>
+        Xcharts.brushZoomIII({
+            container: 'JQ_risk_column',
+        })
+    </script>
+</body>
+
+</html>
