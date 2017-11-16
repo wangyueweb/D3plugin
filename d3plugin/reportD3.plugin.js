@@ -1319,6 +1319,10 @@ var Xcharts = (function () {
         }
     };
 
+    /**
+     * 绘制折线图，支持笔刷brush（区域）放大缩小功能，至少一条相同id数据
+     * @param {*} config 
+     */ 
     charts.brushZoomI = function (config) {
         var defaults = {
             container: '',
@@ -1615,6 +1619,8 @@ var Xcharts = (function () {
                 });;
         }
     }
+
+    
 
     return charts;
 })();
