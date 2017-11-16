@@ -1529,7 +1529,6 @@ var Xcharts = (function () {
                     if (settings.data[k].length > 0) {
                         for (var j = 0, len_j = settings.data[k].length; j < len_j; j++) {
                             for (var m = 0, len_m = settings.data[k][j][0].length; m < len_m; m++) {
-                                console.log(settings.data[k][j][0][m])
                                 g.append('g')
                                     .attr('class', 'zy-circle-all')
                                     //.attr('transform', 'translate(' + settings.layout.margin.left + ',' + settings.layout.margin.top + ')')
