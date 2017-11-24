@@ -1,0 +1,271 @@
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>HelloWorld</title>
+        <script src="https://cdn.bootcss.com/jquery/2.2.3/jquery.js"></script>
+        <script src="./d3plugin/d3.js"></script>
+        <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+        <script src="https://d3js.org/d3-random.v1.min.js"></script>
+        <script src="./d3plugin/reportD3.plugin.js"></script>
+        <script src="./d3plugin/allReport.js"></script>
+        <style>
+            .area {
+                fill: lightsteelblue;
+            }
+
+            .line {
+                fill: none;
+                stroke: steelblue;
+                stroke-width: 1.5px;
+            }
+
+            .dot {
+                fill: white;
+                stroke: steelblue;
+                stroke-width: 1.5px;
+            }
+        </style>
+        <!--<script src="https://d3js.org/d3-random.v1.min.js"></script>-->
+        <!--<script type="text/javascript">
+            function randomNormal(num,mu,sigma){
+                var x,r;
+                mu = mu == null ? 0 : +mu;
+                sigma = sigma == null ? 1: +sigma;
+                var y;
+//                console.log(x);
+//                console.log(mu);
+//                console.log(sigma);
+                if(x != null){
+                    y = x, x = null;
+                    console.log('1');
+                }else{
+
+                    x = num *2 -1;
+                    y = num *2 -1;
+                    r =  x*x + y*y;
+                }
+                /*return function (){
+                    var y;
+                    if(x != null)y = x, x = null;
+                    else do{
+                        x = num *2 -1;
+                        y = num *2 -1;
+                        r =  x*x + y*y;
+                    }while(!r || r >1);
+
+                    return mu + sigma*y*Math.sqrt(-2*Math.log(r)/r);
+                };*/
+            }
+
+            var x = randomNormal(0.5,3,1);
+//            console.log(x);
+
+            function random(num,mu,sigma){
+                var A1 = 0.31938153;
+                var A2 = -0.356563782;
+                var A3 = 1.781477937,
+                        A4 = -1.821255978,
+                        A5 = 1.330274429,
+                        RSQRT2PI = 0.39894228040143267793994605993438;
+
+                var K = 1 / (1 + 0.2316419 * Math.abs(num-mu));
+
+
+                var left = 1 / (Math.sqrt(2*(Math.PI))*sigma);
+                var left2 = 1 / (Math.sqrt(2*Math.PI)*Math.sqrt(sigma));
+                var left1 = 1 / (Math.sqrt(2*(Math.PI)*sigma));
+
+                var cnd = RSQRT2PI * Math.exp(-0.5*(num-mu)*(num-mu)/sigma/sigma) * (K*(A1+(K*(A2+(K*(A3+K*(A4+K*A5)))))));
+
+                if(num > mu){
+                    cnd = 1 -cnd;
+                }
+
+//                return cnd;
+
+                var result = left  * Math.exp(-0.5*(num-mu)*(num-mu)/sigma/sigma);
+                return result;
+            }
+
+            var y = random(1,0,1);
+            console.log(y);
+        </script>-->
+    </head>
+    <body>
+    <script>
+        var data = d3.range(10).map(function(i) {
+            return i ? {x: i / 39, y: (Math.sin(i / 3) + 2) / 4} : null;
+        });
+        var min = -3,max = 3,len = (max-min)/0.1;
+        function random(num,mu,sigma){
+            var A1 = 0.31938153;
+            var A2 = -0.356563782;
+            var A3 = 1.781477937,
+                    A4 = -1.821255978,
+                    A5 = 1.330274429,
+                    RSQRT2PI = 0.39894228040143267793994605993438;
+
+            var K = 1 / (1 + 0.2316419 * Math.abs(num-mu));
+            var cnd = RSQRT2PI * Math.exp(-0.5*(num-mu)*(num-mu)/sigma/sigma) * (K*(A1+(K*(A2+(K*(A3+K*(A4+K*A5)))))));
+            if(num > mu){
+                cnd = 1 -cnd;
+            }
+            return cnd;
+
+//            var left = 1 / (Math.sqrt(2*(Math.PI))*sigma);
+//            var result = left  * Math.exp(-0.5*(num-mu)*(num-mu)/sigma/sigma);
+//            return result;
+        }
+        console.log(len);
+        function getDate(){
+            var arr = [];
+            for(var i=0;i<len;i++){
+                var x = min + i*0.1;
+                var y = random(x,0,1);
+
+                arr.push({x:x,y:y});
+            }
+            return arr;
+        }
+
+
+        var data1 = getDate();
+//        var data1 = [{x:0.0,y:0.05},{x:0.1,y:0.1},{x:0.2,y:0.12},{x:0.3,y:0.4},{x:0.4,y:0.9},{x:0.5,y:0.4},{x:0.6,y:0.12},{x:0.7,y:0.1},{x:0.8,y:0.05}];
+
+        console.log(data1);
+
+        var margin = {top: 40, right: 40, bottom: 40, left: 40},
+                width = 960 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
+
+        var x = d3.scaleLinear()
+                .domain([min,max])
+                .range([0, width]);
+
+        var y = d3.scaleLinear()
+                .range([height, 0]);
+
+        var line = d3.line()
+                .defined(function(d) { return d; })
+                .x(function(d) { return x(d.x); })
+                .y(function(d) { return y(d.y); })
+//                .interpolate("cardinal");
+                .curve(d3.curveCatmullRom.alpha(0.5));
+
+        var svg = d3.select("body").append("svg")
+                .datum(data1)
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.append("g")
+                .attr("class", "axis axis--x")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
+
+        svg.append("g")
+                .attr("class", "axis axis--y")
+                .call(d3.axisLeft(y));
+
+        svg.append("path")
+                .attr("class", "line")
+                .attr("d", line);
+
+        /*svg.selectAll(".dot")
+                .data(data1.filter(function(d) { return d; }))
+                .enter().append("circle")
+                .attr("class", "dot")
+                .attr("cx", line.x())
+                .attr("cy", line.y())
+                .attr("r", 3.5);*/
+        /*function random(num,mu,sigma){
+            var left = 1 / (Math.sqrt(2*(Math.PI))*sigma);
+//            var left2 = 1 / (Math.sqrt(2*Math.PI)*Math.sqrt(sigma));
+//            var left1 = 1 / (Math.sqrt(2*(Math.PI)*sigma));
+            var result = left  * Math.exp(-0.5*(num-mu)*(num-mu)/sigma/sigma);
+            return result;
+
+            /!*
+             var A1 = 0.31938153;
+             var A2 = -0.356563782;
+             var A3 = 1.781477937,
+             A4 = -1.821255978,
+             A5 = 1.330274429,
+             RSQRT2PI = 0.39894228040143267793994605993438;
+
+             var K = 1 / (1 + 0.2316419 * Math.abs(num-mu));
+            var cnd = RSQRT2PI * Math.exp(-0.5*(num-mu)*(num-mu)/sigma/sigma) * (K*(A1+(K*(A2+(K*(A3+K*(A4+K*A5)))))));
+            if(num > mu){
+                cnd = 1 -cnd;
+            }
+            return cnd;*!/
+        }
+        var data = d3.range(10).map(function (i) {
+            return i ? {
+                x: i / 39,
+                y: (Math.sin(i / 3) + 2) / 4
+            } : null;
+        });
+
+
+
+        var margin = {
+                    top: 40,
+                    right: 40,
+                    bottom: 40,
+                    left: 40
+                },
+                width = 960 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
+
+        var x = d3.scaleLinear()
+                .range([0, width]);
+
+        var y = d3.scaleLinear()
+                .range([height, 0]);
+
+        var line = d3.line()
+                .defined(function (d) {
+                    return d;
+                })
+                .x(function (d) {
+                    return x(d.x);
+                })
+                .y(function (d) {
+                    return y(d.y);
+                });
+
+        var svg = d3.select("body").append("svg")
+                .datum(data)
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.append("g")
+                .attr("class", "axis axis--x")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
+
+        svg.append("g")
+                .attr("class", "axis axis--y")
+                .call(d3.axisLeft(y));
+
+        svg.append("path")
+                .attr("class", "line")
+                .attr("d", line);
+
+        svg.selectAll(".dot")
+                .data(data.filter(function (d) {
+                    return d;
+                }))
+                .enter().append("circle")
+                .attr("class", "dot")
+                .attr("cx", line.x())
+                .attr("cy", line.y())
+                .attr("r", 3.5);*/
+    </script>
+    </body>
+</html>
