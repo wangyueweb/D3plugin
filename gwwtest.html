@@ -27,13 +27,67 @@
     </head>
     <body>
         <div id="JQ_normal_curve" style="width:1200px;height:500px"></div>
+        <div id="JQ_normal_random" style="width:1200px;height:500px"></div>
     <script>
         // var data1 = getDate();
-        var dataset = {"bool":true,"message":"success","needFormat_":"need","result":{"accumulationData":[{"COUNT":2,"LENGTH":0.3},{"COUNT":6,"LENGTH":0.4},{"COUNT":14,"LENGTH":0.5},{"COUNT":18,"LENGTH":0.6},{"COUNT":26,"LENGTH":0.7},{"COUNT":36,"LENGTH":0.8},{"COUNT":38,"LENGTH":0.9},{"COUNT":54,"LENGTH":1},{"COUNT":62,"LENGTH":1.1},{"COUNT":71,"LENGTH":1.2},{"COUNT":72,"LENGTH":1.3},{"COUNT":82,"LENGTH":1.4},{"COUNT":89,"LENGTH":1.5},{"COUNT":92,"LENGTH":1.6},{"COUNT":95,"LENGTH":1.7},{"COUNT":96,"LENGTH":1.8},{"COUNT":99,"LENGTH":1.9},{"COUNT":106,"LENGTH":2},{"COUNT":110,"LENGTH":2.1},{"COUNT":123,"LENGTH":2.2},{"COUNT":142,"LENGTH":2.4},{"COUNT":173,"LENGTH":2.5},{"COUNT":193,"LENGTH":2.6},{"COUNT":203,"LENGTH":2.7},{"COUNT":208,"LENGTH":2.8},{"COUNT":217,"LENGTH":2.9},{"COUNT":224,"LENGTH":3},{"COUNT":234,"LENGTH":3.1},{"COUNT":246,"LENGTH":3.2},{"COUNT":268,"LENGTH":3.3},{"COUNT":277,"LENGTH":3.4},{"COUNT":288,"LENGTH":3.5},{"COUNT":292,"LENGTH":3.6},{"COUNT":294,"LENGTH":3.8},{"COUNT":298,"LENGTH":3.9},{"COUNT":305,"LENGTH":4},{"COUNT":307,"LENGTH":4.2},{"COUNT":309,"LENGTH":4.3},{"COUNT":311,"LENGTH":4.4},{"COUNT":312,"LENGTH":4.6},{"COUNT":314,"LENGTH":4.7},{"COUNT":316,"LENGTH":4.9},{"COUNT":318,"LENGTH":5},{"COUNT":322,"LENGTH":5.1},{"COUNT":323,"LENGTH":5.2},{"COUNT":324,"LENGTH":5.3},{"COUNT":327,"LENGTH":5.4},{"COUNT":328,"LENGTH":5.5},{"COUNT":329,"LENGTH":5.6},{"COUNT":330,"LENGTH":5.8},{"COUNT":333,"LENGTH":6},{"COUNT":335,"LENGTH":6.1},{"COUNT":339,"LENGTH":6.2},{"COUNT":340,"LENGTH":6.4},{"COUNT":342,"LENGTH":6.5},{"COUNT":343,"LENGTH":6.8},{"COUNT":346,"LENGTH":6.9},{"COUNT":349,"LENGTH":7},{"COUNT":350,"LENGTH":7.1},{"COUNT":353,"LENGTH":7.2},{"COUNT":355,"LENGTH":7.4},{"COUNT":356,"LENGTH":7.7},{"COUNT":358,"LENGTH":7.8},{"COUNT":366,"LENGTH":7.9},{"COUNT":441,"LENGTH":8},{"COUNT":460,"LENGTH":8.1},{"COUNT":466,"LENGTH":8.2},{"COUNT":473,"LENGTH":8.3},{"COUNT":475,"LENGTH":8.4},{"COUNT":483,"LENGTH":8.5},{"COUNT":488,"LENGTH":8.6},{"COUNT":494,"LENGTH":8.7},{"COUNT":497,"LENGTH":8.8},{"COUNT":506,"LENGTH":8.9},{"COUNT":535,"LENGTH":9},{"COUNT":540,"LENGTH":9.1},{"COUNT":549,"LENGTH":9.2},{"COUNT":560,"LENGTH":9.3},{"COUNT":567,"LENGTH":9.4},{"COUNT":574,"LENGTH":9.5},{"COUNT":583,"LENGTH":9.6},{"COUNT":587,"LENGTH":9.7},{"COUNT":597,"LENGTH":9.8},{"COUNT":606,"LENGTH":9.9},{"COUNT":620,"LENGTH":10},{"COUNT":630,"LENGTH":10.1},{"COUNT":643,"LENGTH":10.2},{"COUNT":651,"LENGTH":10.3},{"COUNT":657,"LENGTH":10.4},{"COUNT":662,"LENGTH":10.5},{"COUNT":667,"LENGTH":10.6},{"COUNT":669,"LENGTH":10.7},{"COUNT":673,"LENGTH":10.8},{"COUNT":682,"LENGTH":10.9},{"COUNT":688,"LENGTH":11},{"COUNT":692,"LENGTH":11.1},{"COUNT":701,"LENGTH":11.2},{"COUNT":704,"LENGTH":11.3},{"COUNT":711,"LENGTH":11.4},{"COUNT":718,"LENGTH":11.5},{"COUNT":726,"LENGTH":11.6},{"COUNT":735,"LENGTH":11.7},{"COUNT":745,"LENGTH":11.8},{"COUNT":868,"LENGTH":11.9},{"COUNT":2324,"LENGTH":12},{"COUNT":2415,"LENGTH":12.1},{"COUNT":2430,"LENGTH":12.2},{"COUNT":2442,"LENGTH":12.3},{"COUNT":2449,"LENGTH":12.4},{"COUNT":2450,"LENGTH":12.8}],"avgAndVariance":{"AVERAGE":10.3,"VARIANCE":10.95},"densityData":[{"COUNT":2,"LENGTH":0.3},{"COUNT":4,"LENGTH":0.4},{"COUNT":8,"LENGTH":0.5},{"COUNT":4,"LENGTH":0.6},{"COUNT":8,"LENGTH":0.7},{"COUNT":10,"LENGTH":0.8},{"COUNT":2,"LENGTH":0.9},{"COUNT":16,"LENGTH":1},{"COUNT":8,"LENGTH":1.1},{"COUNT":9,"LENGTH":1.2},{"COUNT":1,"LENGTH":1.3},{"COUNT":10,"LENGTH":1.4},{"COUNT":7,"LENGTH":1.5},{"COUNT":3,"LENGTH":1.6},{"COUNT":3,"LENGTH":1.7},{"COUNT":1,"LENGTH":1.8},{"COUNT":3,"LENGTH":1.9},{"COUNT":7,"LENGTH":2},{"COUNT":4,"LENGTH":2.1},{"COUNT":13,"LENGTH":2.2},{"COUNT":19,"LENGTH":2.4},{"COUNT":31,"LENGTH":2.5},{"COUNT":20,"LENGTH":2.6},{"COUNT":10,"LENGTH":2.7},{"COUNT":5,"LENGTH":2.8},{"COUNT":9,"LENGTH":2.9},{"COUNT":7,"LENGTH":3},{"COUNT":10,"LENGTH":3.1},{"COUNT":12,"LENGTH":3.2},{"COUNT":22,"LENGTH":3.3},{"COUNT":9,"LENGTH":3.4},{"COUNT":11,"LENGTH":3.5},{"COUNT":4,"LENGTH":3.6},{"COUNT":2,"LENGTH":3.8},{"COUNT":4,"LENGTH":3.9},{"COUNT":7,"LENGTH":4},{"COUNT":2,"LENGTH":4.2},{"COUNT":2,"LENGTH":4.3},{"COUNT":2,"LENGTH":4.4},{"COUNT":1,"LENGTH":4.6},{"COUNT":2,"LENGTH":4.7},{"COUNT":2,"LENGTH":4.9},{"COUNT":2,"LENGTH":5},{"COUNT":4,"LENGTH":5.1},{"COUNT":1,"LENGTH":5.2},{"COUNT":1,"LENGTH":5.3},{"COUNT":3,"LENGTH":5.4},{"COUNT":1,"LENGTH":5.5},{"COUNT":1,"LENGTH":5.6},{"COUNT":1,"LENGTH":5.8},{"COUNT":3,"LENGTH":6},{"COUNT":2,"LENGTH":6.1},{"COUNT":4,"LENGTH":6.2},{"COUNT":1,"LENGTH":6.4},{"COUNT":2,"LENGTH":6.5},{"COUNT":1,"LENGTH":6.8},{"COUNT":3,"LENGTH":6.9},{"COUNT":3,"LENGTH":7},{"COUNT":1,"LENGTH":7.1},{"COUNT":3,"LENGTH":7.2},{"COUNT":2,"LENGTH":7.4},{"COUNT":1,"LENGTH":7.7},{"COUNT":2,"LENGTH":7.8},{"COUNT":8,"LENGTH":7.9},{"COUNT":75,"LENGTH":8},{"COUNT":19,"LENGTH":8.1},{"COUNT":6,"LENGTH":8.2},{"COUNT":7,"LENGTH":8.3},{"COUNT":2,"LENGTH":8.4},{"COUNT":8,"LENGTH":8.5},{"COUNT":5,"LENGTH":8.6},{"COUNT":6,"LENGTH":8.7},{"COUNT":3,"LENGTH":8.8},{"COUNT":9,"LENGTH":8.9},{"COUNT":29,"LENGTH":9},{"COUNT":5,"LENGTH":9.1},{"COUNT":9,"LENGTH":9.2},{"COUNT":11,"LENGTH":9.3},{"COUNT":7,"LENGTH":9.4},{"COUNT":7,"LENGTH":9.5},{"COUNT":9,"LENGTH":9.6},{"COUNT":4,"LENGTH":9.7},{"COUNT":10,"LENGTH":9.8},{"COUNT":9,"LENGTH":9.9},{"COUNT":14,"LENGTH":10},{"COUNT":10,"LENGTH":10.1},{"COUNT":13,"LENGTH":10.2},{"COUNT":8,"LENGTH":10.3},{"COUNT":6,"LENGTH":10.4},{"COUNT":5,"LENGTH":10.5},{"COUNT":5,"LENGTH":10.6},{"COUNT":2,"LENGTH":10.7},{"COUNT":4,"LENGTH":10.8},{"COUNT":9,"LENGTH":10.9},{"COUNT":6,"LENGTH":11},{"COUNT":4,"LENGTH":11.1},{"COUNT":9,"LENGTH":11.2},{"COUNT":3,"LENGTH":11.3},{"COUNT":7,"LENGTH":11.4},{"COUNT":7,"LENGTH":11.5},{"COUNT":8,"LENGTH":11.6},{"COUNT":9,"LENGTH":11.7},{"COUNT":10,"LENGTH":11.8},{"COUNT":123,"LENGTH":11.9},{"COUNT":1456,"LENGTH":12},{"COUNT":91,"LENGTH":12.1},{"COUNT":15,"LENGTH":12.2},{"COUNT":12,"LENGTH":12.3},{"COUNT":7,"LENGTH":12.4},{"COUNT":1,"LENGTH":12.8}]}}
-        var pileMelegeData =  dataset.result.accumulationData
-        //        var data1 = [{x:0.0,y:0.05},{x:0.1,y:0.1},{x:0.2,y:0.12},{x:0.3,y:0.4},{x:0.4,y:0.9},{x:0.5,y:0.4},{x:0.6,y:0.12},{x:0.7,y:0.1},{x:0.8,y:0.05}];
+        var dataset = {"bool":true,"message":"success","needFormat_":"need","result":{"accumulationData":[{"COUNT":2,"LENGTH":0.3},{"COUNT":6,"LENGTH":0.4},{"COUNT":14,"LENGTH":0.5},{"COUNT":18,"LENGTH":0.6},{"COUNT":26,"LENGTH":0.7},{"COUNT":36,"LENGTH":0.8},{"COUNT":38,"LENGTH":0.9},{"COUNT":54,"LENGTH":1},{"COUNT":62,"LENGTH":1.1},{"COUNT":71,"LENGTH":1.2},{"COUNT":72,"LENGTH":1.3},{"COUNT":82,"LENGTH":1.4},{"COUNT":89,"LENGTH":1.5},{"COUNT":92,"LENGTH":1.6},{"COUNT":95,"LENGTH":1.7},{"COUNT":96,"LENGTH":1.8},{"COUNT":99,"LENGTH":1.9},{"COUNT":106,"LENGTH":2},{"COUNT":110,"LENGTH":2.1},{"COUNT":123,"LENGTH":2.2},{"COUNT":142,"LENGTH":2.4},{"COUNT":173,"LENGTH":2.5},{"COUNT":193,"LENGTH":2.6},{"COUNT":203,"LENGTH":2.7},{"COUNT":208,"LENGTH":2.8},{"COUNT":217,"LENGTH":2.9},{"COUNT":224,"LENGTH":3},{"COUNT":234,"LENGTH":3.1},{"COUNT":246,"LENGTH":3.2},{"COUNT":268,"LENGTH":3.3},{"COUNT":277,"LENGTH":3.4},{"COUNT":288,"LENGTH":3.5},{"COUNT":292,"LENGTH":3.6},{"COUNT":294,"LENGTH":3.8},{"COUNT":298,"LENGTH":3.9},{"COUNT":305,"LENGTH":4},{"COUNT":307,"LENGTH":4.2},{"COUNT":309,"LENGTH":4.3},{"COUNT":311,"LENGTH":4.4},{"COUNT":312,"LENGTH":4.6},{"COUNT":314,"LENGTH":4.7},{"COUNT":316,"LENGTH":4.9},{"COUNT":318,"LENGTH":5},{"COUNT":322,"LENGTH":5.1},{"COUNT":323,"LENGTH":5.2},{"COUNT":324,"LENGTH":5.3},{"COUNT":327,"LENGTH":5.4},{"COUNT":328,"LENGTH":5.5},{"COUNT":329,"LENGTH":5.6},{"COUNT":330,"LENGTH":5.8},{"COUNT":333,"LENGTH":6},{"COUNT":335,"LENGTH":6.1},{"COUNT":339,"LENGTH":6.2},{"COUNT":340,"LENGTH":6.4},{"COUNT":342,"LENGTH":6.5},{"COUNT":343,"LENGTH":6.8},{"COUNT":346,"LENGTH":6.9},{"COUNT":349,"LENGTH":7},{"COUNT":350,"LENGTH":7.1},{"COUNT":353,"LENGTH":7.2},{"COUNT":355,"LENGTH":7.4},{"COUNT":356,"LENGTH":7.7},{"COUNT":358,"LENGTH":7.8},{"COUNT":366,"LENGTH":7.9},{"COUNT":441,"LENGTH":8},{"COUNT":460,"LENGTH":8.1},{"COUNT":466,"LENGTH":8.2},{"COUNT":473,"LENGTH":8.3},{"COUNT":475,"LENGTH":8.4},{"COUNT":483,"LENGTH":8.5},{"COUNT":488,"LENGTH":8.6},{"COUNT":494,"LENGTH":8.7},{"COUNT":497,"LENGTH":8.8},{"COUNT":506,"LENGTH":8.9},{"COUNT":535,"LENGTH":9},{"COUNT":540,"LENGTH":9.1},{"COUNT":549,"LENGTH":9.2},{"COUNT":560,"LENGTH":9.3},{"COUNT":567,"LENGTH":9.4},{"COUNT":574,"LENGTH":9.5},{"COUNT":583,"LENGTH":9.6},{"COUNT":587,"LENGTH":9.7},{"COUNT":597,"LENGTH":9.8},{"COUNT":606,"LENGTH":9.9},{"COUNT":620,"LENGTH":10},{"COUNT":630,"LENGTH":10.1},{"COUNT":643,"LENGTH":10.2},{"COUNT":651,"LENGTH":10.3},{"COUNT":657,"LENGTH":10.4},{"COUNT":662,"LENGTH":10.5},{"COUNT":667,"LENGTH":10.6},{"COUNT":669,"LENGTH":10.7},{"COUNT":673,"LENGTH":10.8},{"COUNT":682,"LENGTH":10.9},{"COUNT":688,"LENGTH":11},{"COUNT":692,"LENGTH":11.1},{"COUNT":701,"LENGTH":11.2},{"COUNT":704,"LENGTH":11.3},{"COUNT":711,"LENGTH":11.4},{"COUNT":718,"LENGTH":11.5},{"COUNT":726,"LENGTH":11.6},{"COUNT":735,"LENGTH":11.7},{"COUNT":745,"LENGTH":11.8},{"COUNT":868,"LENGTH":11.9},{"COUNT":2324,"LENGTH":12},{"COUNT":2415,"LENGTH":12.1},{"COUNT":2430,"LENGTH":12.2},{"COUNT":2442,"LENGTH":12.3},{"COUNT":2449,"LENGTH":12.4},{"COUNT":2450,"LENGTH":12.8}],"avgAndVariance":{"LENGTH":12,"VARIANCE":0.4},"densityData":[{"COUNT":2,"LENGTH":0.3},{"COUNT":4,"LENGTH":0.4},{"COUNT":8,"LENGTH":0.5},{"COUNT":4,"LENGTH":0.6},{"COUNT":8,"LENGTH":0.7},{"COUNT":10,"LENGTH":0.8},{"COUNT":2,"LENGTH":0.9},{"COUNT":16,"LENGTH":1},{"COUNT":8,"LENGTH":1.1},{"COUNT":9,"LENGTH":1.2},{"COUNT":1,"LENGTH":1.3},{"COUNT":10,"LENGTH":1.4},{"COUNT":7,"LENGTH":1.5},{"COUNT":3,"LENGTH":1.6},{"COUNT":3,"LENGTH":1.7},{"COUNT":1,"LENGTH":1.8},{"COUNT":3,"LENGTH":1.9},{"COUNT":7,"LENGTH":2},{"COUNT":4,"LENGTH":2.1},{"COUNT":13,"LENGTH":2.2},{"COUNT":19,"LENGTH":2.4},{"COUNT":31,"LENGTH":2.5},{"COUNT":20,"LENGTH":2.6},{"COUNT":10,"LENGTH":2.7},{"COUNT":5,"LENGTH":2.8},{"COUNT":9,"LENGTH":2.9},{"COUNT":7,"LENGTH":3},{"COUNT":10,"LENGTH":3.1},{"COUNT":12,"LENGTH":3.2},{"COUNT":22,"LENGTH":3.3},{"COUNT":9,"LENGTH":3.4},{"COUNT":11,"LENGTH":3.5},{"COUNT":4,"LENGTH":3.6},{"COUNT":2,"LENGTH":3.8},{"COUNT":4,"LENGTH":3.9},{"COUNT":7,"LENGTH":4},{"COUNT":2,"LENGTH":4.2},{"COUNT":2,"LENGTH":4.3},{"COUNT":2,"LENGTH":4.4},{"COUNT":1,"LENGTH":4.6},{"COUNT":2,"LENGTH":4.7},{"COUNT":2,"LENGTH":4.9},{"COUNT":2,"LENGTH":5},{"COUNT":4,"LENGTH":5.1},{"COUNT":1,"LENGTH":5.2},{"COUNT":1,"LENGTH":5.3},{"COUNT":3,"LENGTH":5.4},{"COUNT":1,"LENGTH":5.5},{"COUNT":1,"LENGTH":5.6},{"COUNT":1,"LENGTH":5.8},{"COUNT":3,"LENGTH":6},{"COUNT":2,"LENGTH":6.1},{"COUNT":4,"LENGTH":6.2},{"COUNT":1,"LENGTH":6.4},{"COUNT":2,"LENGTH":6.5},{"COUNT":1,"LENGTH":6.8},{"COUNT":3,"LENGTH":6.9},{"COUNT":3,"LENGTH":7},{"COUNT":1,"LENGTH":7.1},{"COUNT":3,"LENGTH":7.2},{"COUNT":2,"LENGTH":7.4},{"COUNT":1,"LENGTH":7.7},{"COUNT":2,"LENGTH":7.8},{"COUNT":8,"LENGTH":7.9},{"COUNT":75,"LENGTH":8},{"COUNT":19,"LENGTH":8.1},{"COUNT":6,"LENGTH":8.2},{"COUNT":7,"LENGTH":8.3},{"COUNT":2,"LENGTH":8.4},{"COUNT":8,"LENGTH":8.5},{"COUNT":5,"LENGTH":8.6},{"COUNT":6,"LENGTH":8.7},{"COUNT":3,"LENGTH":8.8},{"COUNT":9,"LENGTH":8.9},{"COUNT":29,"LENGTH":9},{"COUNT":5,"LENGTH":9.1},{"COUNT":9,"LENGTH":9.2},{"COUNT":11,"LENGTH":9.3},{"COUNT":7,"LENGTH":9.4},{"COUNT":7,"LENGTH":9.5},{"COUNT":9,"LENGTH":9.6},{"COUNT":4,"LENGTH":9.7},{"COUNT":10,"LENGTH":9.8},{"COUNT":9,"LENGTH":9.9},{"COUNT":14,"LENGTH":10},{"COUNT":10,"LENGTH":10.1},{"COUNT":13,"LENGTH":10.2},{"COUNT":8,"LENGTH":10.3},{"COUNT":6,"LENGTH":10.4},{"COUNT":5,"LENGTH":10.5},{"COUNT":5,"LENGTH":10.6},{"COUNT":2,"LENGTH":10.7},{"COUNT":4,"LENGTH":10.8},{"COUNT":9,"LENGTH":10.9},{"COUNT":6,"LENGTH":11},{"COUNT":4,"LENGTH":11.1},{"COUNT":9,"LENGTH":11.2},{"COUNT":3,"LENGTH":11.3},{"COUNT":7,"LENGTH":11.4},{"COUNT":7,"LENGTH":11.5},{"COUNT":8,"LENGTH":11.6},{"COUNT":9,"LENGTH":11.7},{"COUNT":10,"LENGTH":11.8},{"COUNT":123,"LENGTH":11.9},{"COUNT":1456,"LENGTH":12},{"COUNT":91,"LENGTH":12.1},{"COUNT":15,"LENGTH":12.2},{"COUNT":12,"LENGTH":12.3},{"COUNT":7,"LENGTH":12.4},{"COUNT":1,"LENGTH":12.8}]}}
 
-        var testDate = ["2016", "2017"];
+        var accumulationData =  dataset.result.accumulationData //累积 - 图1数据
+        var densityData = dataset.result.densityData; // 密度 - 图2数据
+        var averageData = dataset.result.avgAndVariance.LENGTH; // 平均数
+        var varianceData = dataset.result.avgAndVariance.VARIANCE; // 方差
+        
+
+        var XArr1 = returnXArr(getXArea(accumulationData));
+        var XArr2 = returnXArr(getXArea(densityData));
+
+        var YArr1 = getYArea(accumulationData)[0];
+        var YArr2 = getYArea(densityData)[0];
+
+        var accumulation = getData(accumulationData) // 累积 - 数据转化
+        var densition = getData(densityData); // 密度 - 数据转化
+
+        var maxY1 = d3.max(getYArea(accumulationData)[0])
+        var maxY2 = d3.max(getYArea(densityData)[0])
+
+        var min1 = d3.min(XArr1),max1 = d3.max(XArr1),differ1 = (max1-min1);
+        var min2 = d3.min(XArr2),max2 = d3.max(XArr2),differ2 = (max2-min2);
+
+        /**
+         * @param differ:值域的差，val为值间距间隔参数(Number)，默认没有，添加后值间距为 默认间距 * val
+        */
+        function getLength(differ,val){
+            var len,dif,arr = [];
+            if(val){
+                dif = val;
+                len = differ / val;
+            }else{
+                if(differ<=30){
+                    dif = 0.1
+                    len = differ / 0.1;
+                }else if(differ>30 && differ<=300){
+                    dif = 1
+                    len = differ / 1;
+                }else if(differ>300 && differ<=3000){
+                    dif = 10
+                    len = differ / 10;
+                }else if(differ>3000){
+                    dif = 100
+                    len = differ / 100;
+                }
+            }
+            arr.push(dif,len);
+            return arr;
+        }
+
+        var len1 = getLength(differ1);
+        var len2 = getLength(differ2);
+        var commonData1 = getCalculate1(len1);
+        var commonData2 = getCalculate2(len2);
+
+        var accumulateData = [accumulation,commonData1];
+        var density = [densition,commonData2];
+
         var melege_score_text = [],
             melege_score_legend = [
                 ['管节长度分布概率密度 : Pll-2008-成都至重庆 - vs - ROSEN-2008-成都至重庆', '#37a4dd']
@@ -41,52 +95,48 @@
 
         //获取图表横轴范围
         function getXArea(data) {
-            var XScale = [],
-                value = [];
+            var value = [];
             for (var s = 0; s < data.length; s++) {
-                value.push(data[s].COUNT);
+                value.push(data[s].LENGTH);
             }
-            XScale = [value];
+            var XScale = [value];
             return XScale
         }
 
-        var getXAreaData = getXArea(pileMelegeData);
-
-        var XArr = [];
-        if (getXAreaData.length > 0) {
-            for (var r = 0; r < getXAreaData.length; r++) {
-                for (var b = 0; b < getXAreaData[r].length; b++) {
-                    XArr.push(getXAreaData[r][b]);
+        function returnXArr (data){
+            var XArr = [];
+            if (data.length > 0) {
+                for (var r = 0; r < data.length; r++) {
+                    for (var b = 0; b < data[r].length; b++) {
+                        XArr.push(data[r][b]);
+                    }
                 }
+                return XArr;
             }
         }
 
         //获取图表竖轴范围
         function getYArea(data) {
-            var YScale = [],
-                value = [];
+            var value = [];
             for (var s = 0; s < data.length; s++) {
-                value.push(data[s].LENGTH);
+                value.push(data[s].COUNT);
             }
-            YScale = [value]
+            var YScale = [value]
+            
             return YScale
         }
-
-        var YArr = getYArea(pileMelegeData)[0];
-
+        
         function getData(data) {
             if(data.length){
                 var arr = [],x,y;
                 for(var i = 0; i < data.length; i++){
-                    arr.push({'x':data[i].COUNT,'y':data[i].LENGTH})
+                    arr.push({'x':data[i].LENGTH,'y':data[i].COUNT})
                 }
                 return arr;
             }
         }
-        var melgeChartData = getData(pileMelegeData)
-
-        var min = d3.min(XArr),max = d3.max(XArr),len = (max-min) / 10;
-        function random(num,mu,sigma){
+        
+        function calculate1(num,mu,sigma,maxY){
             var A1 = 0.31938153;
             var A2 = -0.356563782;
             var A3 = 1.781477937,
@@ -94,46 +144,44 @@
                     A5 = 1.330274429,
                     RSQRT2PI = 0.39894228040143267793994605993438;
 
-            var K = 1 / (1 + 0.2316419 * Math.abs(num-mu));
+            var K = 1.0 / (1.0 + 0.2316419 * Math.abs(num-mu));
             var cnd = RSQRT2PI * Math.exp(-0.5*(num-mu)*(num-mu)/sigma/sigma) * (K*(A1+(K*(A2+(K*(A3+K*(A4+K*A5)))))));
             if(num > mu){
-                cnd = 1 -cnd;
+                cnd = (1-cnd) * maxY;
+            } else {
+                cnd = cnd * maxY
             }
+            
             return cnd;
-
-//            var left = 1 / (Math.sqrt(2*(Math.PI))*sigma);
-//            var result = left  * Math.exp(-0.5*(num-mu)*(num-mu)/sigma/sigma);
-//            return result;
         }
-        console.log(len);
-        function getDates(){
-            var arr = [];
-            for(var i=0;i<len;i++){
-                var x = min + i * 10 ;
-                var y = random(x,10.3,10.95);
-
-                arr.push({x:x,y:y});
+        function calculate2(num,mu,sigma,maxY){
+           var left = 1 / (Math.sqrt(2*(Math.PI))*sigma);
+           var result = left  * Math.exp(-0.5*(num-mu)*(num-mu)/sigma/sigma);
+           result = result * maxY;
+           return result;
+        }
+        function getCalculate1(arr){
+            var result = [];
+            for(var i=0;i<arr[1];i++){
+                var x = min1 + i*arr[0];
+                var y = calculate1(x,averageData,varianceData,maxY1);
+                result.push({x:x,y:y});
             }
-            return arr;
+            return result;
         }
-
-        var data1 = getDates();
-        var normalData = [melgeChartData,data1];
-
-// 管节长度分布概率密度 : Pll-2008-成都至重庆 - vs - ROSEN-2008-成都至重庆
         Xcharts.normalCurve({
             container: 'JQ_normal_curve',
             color: ['#37a4dd', '#fe8e07'],
             text: melege_score_text,
             xAxis: {
-                data: [d3.min(XArr), d3.max(XArr)], // x轴数据
+                data: [d3.min(XArr1), d3.max(XArr1)], // x轴数据
                 ticks: 10 // x轴刻度数
             },
             yAxis: {
-                data: [d3.min(YArr), d3.max(YArr)],
+                data: [d3.min(YArr1), d3.max(YArr1)],
                 ticks: 10
             },
-            data: normalData,
+            data: accumulateData,
             layout: {
                 xtag: '管节长度 (m)',
                 ytag: '管节/特征数量',
@@ -158,7 +206,54 @@
                 location: 0
             }
         });
+        
+        function getCalculate2(arr){
+            var result = [];
+            for(var i=0;i<arr[1];i++){
+                var x = min2 + i * arr[0];
+                var y = calculate2(x,averageData,varianceData,maxY2);
 
+                result.push({x:x,y:y});
+            }
+            return result;
+        }
+        Xcharts.normalCurve({
+            container: 'JQ_normal_random',
+            color: ['#37a4dd', '#fe8e07'],
+            text: melege_score_text,
+            xAxis: {
+                data: [d3.min(XArr2), d3.max(XArr2)], // x轴数据
+                ticks: 10 // x轴刻度数
+            },
+            yAxis: {
+                data: [d3.min(YArr2), d3.max(YArr2)],
+                ticks: 10
+            },
+            data: density,
+            layout: {
+                xtag: '管节长度 (m)',
+                ytag: '管节/特征数量',
+                tagColor: '#8393ad', //xY轴文本颜色
+                gridColor: '#8393ad', // 网格颜色
+                axisColor: '#8393ad', // 坐标轴颜色
+                axisFontColor: '#8393ad', // 坐标轴字体颜色
+                margin: {
+                    left: 60,
+                    right: 50,
+                    top: 50,
+                    bottom: 50
+                }
+            },
+            pointText: {
+                circle: true,
+                startShow: true
+            },
+            legend: {
+                data: melege_score_legend,
+                width: 170,
+                location: 0
+            }
+        });
     </script>
     </body>
 </html>

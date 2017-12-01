@@ -590,6 +590,7 @@ var Xcharts = (function () {
         /*--------- 添加折线 - start ---------*/
         var line = d3.line()
             .x(function (d) {
+                console.log(xScale(d[0]))
                 return xScale(d[0]);
             })
             .y(function (d) {
@@ -1758,7 +1759,7 @@ var Xcharts = (function () {
 
         // 创建x和y轴的线性比例尺
         var xScale = d3.scaleLinear().range([0, w1]).domain([0, 8000]).nice(10),
-            yScale = d3.scaleLinear().range([h1, 0]).domain([0, 100]),
+            yScale = d3.scaleLinear().range([h1, 0]).domain([0, 100]).nice(),
             x2 = d3.scaleLinear().range([0, w1]).domain([0, 8000]).nice(10),
             y2 = d3.scaleLinear().range([h2, 0]).domain([0, 100]);
 
@@ -1999,5 +2000,476 @@ var Xcharts = (function () {
         }
     }
 
+    /**
+     * 正态分布分析图绘制。根据数据绘制实际曲线图，再根据均值方差绘制正态分布图分析
+     * @param config
+     */
+
+    charts.normalCurve = function (config) {
+        var defaults = {
+            container: '',
+            color: ['#37a4dd', '#fe8e07'], // 线条颜色
+            text: ['2016年管道风险评分', '2017年管道风险评分'], // 线段名称
+            xAxis: { // x轴
+                data: [0, 2450], // x轴数据
+                ticks: 10, // x轴刻度数
+                index: [], // x轴索引
+                render: '', // 渲染回调函数
+                show: true, // 是否显示(默认true)
+                orient: 'bottom', // x轴方向(默认bottom)
+                sort: 'asc' // 刻度排序(默认上升asc)
+            },
+            yAxis: { // y轴
+                data: [0, 100],
+                ticks: 10,
+                index: [],
+                render: '',
+                show: true,
+                orient: 'left',
+                sort: 'asc'
+            },
+            data: [
+                [
+                    [
+                        [10, 20],
+                        [1000, 20]
+                    ],
+                    [
+                        [1000, 20],
+                        [1000, 30]
+                    ],
+                    [
+                        [1000, 30],
+                        [2000, 30]
+                    ]
+                ],
+                [
+                    [
+                        [10, 50],
+                        [1000, 50]
+                    ],
+                    [
+                        [1000, 50],
+                        [1000, 90]
+                    ],
+                    [
+                        [1000, 90],
+                        [2500, 90]
+                    ]
+                ]
+            ], // 原始数据集
+            layout: {
+                xtag: '绝对距离', // x轴显示文本
+                ytag: '评分分值', // y轴显示文本
+                tagColor: '#5c5c5c', //xY轴文本颜色
+                margin: {
+                    left: 60,
+                    right: 50,
+                    top: 50,
+                    bottom: 50
+                }, // 距容器边距
+                xgrid: true, // x轴网格
+                ygrid: true, // y轴网格
+                gridColor: '#f0f0f0', // 网格颜色
+                gridWidth: '1px', // 网格粗细
+                lineRender: 'crispEdges', // 网格线条清晰度
+                axisColor: '#f0f0f0', // 坐标轴颜色
+                axisFontColor: '#5c5c5c', // 坐标轴字体颜色
+                axisFontSize: '12px', // 坐标轴字体大小
+                lineWidth: '1.5px', // 线段宽度
+                lineEdges: 'default' // 线段清晰度
+            }, // 区间背景
+            pointText: {
+                show: false, // 节点文字是否显示(默认false不显示)
+                render: '', // 渲染回调函数
+                circle: true, // 节点圆圈是否显示(默认false不显示)
+                startShow: true, // 显示折线开始节点圆圈(默认false不显示)
+                stopShow: false // 显示折线结束节点圆圈(默认false不显示)
+            },
+            legend: {
+                data: [
+                    ['2016年管道风险评分', '#37a4dd'],
+                    ['2017年管道风险评分', '#fe8e07']
+                ], //标签数据
+                width: 170, //标签长度
+                location: 0 //标签所在x方向位置
+            },
+            characteristic: {
+                data: [
+                    ['建议参考管节长度累积分布', '#ff6600'],
+                    ['PII2008成都至重庆管节分布', '#ff6600']
+                ]
+            }
+        };
+
+        var settings = extend(defaults, config);
+
+        var area = getDomArea(settings.container);
+
+        var width = area.width,
+            height = area.height;
+
+        if (settings.data.length === 0) {
+            d3.select('#' + settings.container).html(viewCon.emptyInfo);
+            return false;
+        }
+
+        // d3
+        var svg = d3.select('#' + settings.container)
+            .append('svg')
+            .attr('width', width)
+            .attr('height', height);
+
+        // tag
+        if (settings.layout.ytag) {
+            svg.append('g')
+                .attr('class', 'zy-x-tag')
+                .attr('transform', 'translate(20,'+ height/2 +'),rotate(-90)')
+                .append('text')
+                .attr('id','ttext')
+                .text(settings.layout.ytag)
+                .attr('fill', settings.layout.tagColor);
+        }
+        
+        if (settings.layout.xtag) {
+            svg.append('g')
+                .attr('class', 'zy-y-tag')
+                .attr('transform', 'translate(' + (width / 2.2) + ', ' + (height - 10) + ')')
+                .append('text')
+                .text(settings.layout.xtag)
+                .attr('fill', settings.layout.tagColor);
+        }
+        // legend
+        if (settings.legend.data.length) {
+            var lengendTw;
+            if (settings.legend.location != 0) {
+                lengendTw = settings.legend.location;
+            } else {
+                lengendTw = width / 1.8;
+            }
+            var legend = svg.append('g')
+                .attr('class', 'zy-line-legend')
+                .attr('transform', 'translate(' +(width - lengendTw) / 2 + ', ' + (settings.layout.margin.top - 20) + ')')
+                .selectAll('g')
+                .data(settings.legend.data)
+                .enter()
+                .append('g');
+
+            legend.append('text')
+                .text(function (d) {
+                    return d[0];
+                })
+                .attr('fill', viewCon.axisTagColor)
+                .attr('x', function (d, i) {
+                    return i * settings.legend.width + 20;
+                });
+        }
+
+        // characteristic
+        if (settings.legend.data.length) {
+            var characteristic = svg.append('g')
+                .attr('class', 'phy-characteristic')
+                .data(settings.characteristic.data)
+                .attr('transform', 'translate(0, ' + (settings.layout.margin.top - 20) + ')')
+            
+            characteristic.append('text')
+                .text(function (d) {
+                    return d[0]
+                })
+                .attr('fill', viewCon.axisTagColor)
+                .attr('x', function (d, i) {
+                    return i * settings.legend.width + 20;
+                });
+        }
+
+        var g = svg.append('g')
+            .attr('transform', 'translate(' + settings.layout.margin.left + ', ' + settings.layout.margin.top + ')');
+
+        // xScale
+        var s_width = width - settings.layout.margin.left - settings.layout.margin.right;
+        var s_height = height - settings.layout.margin.top - settings.layout.margin.bottom;
+        var xScale;
+        if (settings.xAxis.sort === 'asc') {
+            xScale = d3.scaleLinear()
+                .domain([d3.min(settings.xAxis.data), d3.max(defaults.xAxis.data)])
+                .range([0, width - settings.layout.margin.left - settings.layout.margin.right])
+                .nice();
+        } else if (settings.xAxis.sort === 'desc') {
+            xScale = d3.scaleLinear()
+                .domain([d3.min(settings.xAxis.data), d3.max(settings.xAxis.data)])
+                .range([width - settings.layout.margin.left - settings.layout.margin.right, 0])
+                .nice();
+        }
+
+        // yScale
+        var yScale;
+        if (settings.yAxis.sort === 'asc') {
+            yScale = d3.scaleLinear()
+                .domain([d3.min(settings.yAxis.data), d3.max(settings.yAxis.data)])
+                .range([height - settings.layout.margin.top - settings.layout.margin.bottom, 0])
+                .nice(d3.max(settings.yAxis.data));
+        } else if (settings.yAxis.sort === 'desc') {
+            yScale = d3.scaleLinear()
+                .domain([d3.mix(settings.yAxis.data), d3.max(settings.yAxis.data)])
+                .range([height - settings.layout.margin.top - settings.layout.margin.bottom, 0])
+                .nice(d3.max(settings.yAxis.data));
+        }
+
+        // xAxis
+        var xAxis;
+        if (settings.xAxis.orient === 'bottom') {
+            if (settings.xAxis.ticks === Infinity) {
+                xAxis = d3.axisBottom(xScale);
+            } else {
+                xAxis = d3.axisBottom(xScale)
+                    .ticks(settings.xAxis.ticks);
+            }
+        } else if (settings.xAxis.orient === 'top') {
+            if (settings.xAxis.ticks === Infinity) {
+                xAxis = d3.axisTop(xScale)
+            } else {
+                xAxis = d3.axisTop(xScale)
+                    .ticks(settings.xAxis.ticks);
+            }
+        }
+
+        // yAxis
+        console.log(settings.yAxis.ticks)
+        var yAxis;
+        if (settings.yAxis.orient === 'left') {
+            if (settings.yAxis.ticks === Infinity) {
+                yAxis = d3.axisLeft(yScale);
+            } else {
+                yAxis = d3.axisLeft(yScale)
+                    .ticks(settings.yAxis.ticks);
+            }
+        } else if (settings.yAxis.orient === 'right') {
+            if (settings.yAxis.ticks === Infinity) {
+                yAxis = d3.axisRight(yScale);
+            } else {
+                yAxis = d3.axisRight(yScale)
+                    .ticks(settings.yAxis.ticks);
+            }
+        }
+
+        // xGrid
+        var xGrid;
+        if (settings.xAxis.orient === 'bottom') {
+            if (settings.xAxis.ticks === Infinity) {
+                xGrid = d3.axisBottom(xScale)
+                    .tickSize([height - settings.layout.margin.top - settings.layout.margin.bottom]);
+
+                    
+            } else {
+                xGrid = d3.axisBottom(xScale)
+                    .tickSize([height - settings.layout.margin.top - settings.layout.margin.bottom])
+                    .ticks(settings.xAxis.ticks);
+            }
+        } else if (settings.xAxis.orient === 'top') {
+            if (settings.xAxis.ticks === Infinity) {
+                xGrid = d3.axisTop(xScale)
+                    .tickSize([height - settings.layout.margin.top - settings.layout.margin.bottom]);
+            } else {
+                xGrid = d3.axisTop(xScale)
+                    .tickSize([height - settings.layout.margin.top - settings.layout.margin.bottom])
+                    .ticks(settings.xAxis.ticks);
+            }
+        }
+
+        // yGrid
+        var yGrid;
+        if (settings.yAxis.orient === 'left') {
+            if (settings.yAxis.ticks === Infinity) {
+                yGrid = d3.axisRight(yScale)
+                    .tickSize([width - settings.layout.margin.left - settings.layout.margin.right]);
+            } else {
+                yGrid = d3.axisRight(yScale)
+                    .tickSize([width - settings.layout.margin.left - settings.layout.margin.right])
+                    .ticks(settings.yAxis.ticks);
+            }
+        } else if (settings.yAxis.orient === 'right') {
+            if (settings.yAxis.ticks === Infinity) {
+                yGrid = d3.axisLeft(yScale)
+                    .tickSize([width - settings.layout.margin.left - settings.layout.margin.right]);
+            } else {
+                yGrid = d3.axisLeft(yScale)
+                    .tickSize([width - settings.layout.margin.left - settings.layout.margin.right])
+                    .ticks(settings.yAxis.ticks);
+            }
+        }
+
+        /*--------- 添加xy轴 网格 - start ---------*/
+        if (settings.layout.xgrid) {
+            var x_xg = 0,
+                y_xg = 0;
+            if (settings.xAxis.orient === 'bottom') {
+                x_xg = settings.layout.margin.left;
+                y_xg = settings.layout.margin.top;
+            } else if (settings.xAxis.orient === 'top') {
+                x_xg = settings.layout.margin.left;
+                y_xg = height - settings.layout.margin.top;
+            }
+            var xgrid = g.append('g')
+                .attr('class', 'zy-x-grid')
+                //.attr('transform', 'translate(' + x_xg + ',' + y_xg + ')')
+                .call(xGrid);
+
+            xgrid.selectAll('text')
+                .text('');
+
+            xgrid.selectAll('line')
+                .attr('stroke', settings.layout.gridColor)
+            //.attr('shape-rendering', settings.layout.lineRender);
+
+            xgrid.selectAll('path')
+            //.attr('stroke', settings.layout.gridColor)
+            //.attr('shape-rendering', settings.layout.lineRender);
+        }
+
+        if (settings.layout.ygrid) {
+            var x_yg = 0,
+                y_yg = 0;
+            if (settings.yAxis.orient === 'left') {
+                x_yg = settings.layout.margin.left;
+                y_yg = settings.layout.margin.top;
+            } else if (settings.yAxis.orient === 'right') {
+                x_yg = width - settings.layout.margin.left;
+                y_yg = settings.layout.margin.top;
+            }
+            var ygrid = g.append('g')
+                .attr('class', 'zy-y-grid')
+                //.attr('transform', 'translate(' + x_yg + ',' + y_yg + ')')
+                .call(yGrid);
+
+            ygrid.selectAll('text')
+                .text('');
+
+            ygrid.selectAll('line')
+                .attr('stroke', settings.layout.gridColor)
+                .attr('shape-rendering', settings.layout.lineRender);
+
+            ygrid.selectAll('path')
+                .attr('stroke', settings.layout.gridColor)
+                .attr('shape-rendering', settings.layout.lineRender);
+        }
+        /*--------- 添加xy轴 网格 - end ---------*/
+
+        /*--------- 添加xy轴 - start ---------*/
+        if (settings.xAxis.show) {
+            var x_xa = 0,
+                y_xa = 0;
+            if (settings.xAxis.orient === 'bottom') {
+                x_xa = 0;
+                y_xa = height - settings.layout.margin.bottom - settings.layout.margin.top;
+            } else if (settings.xAxis.orient === 'top') {
+                x_xa = 0;
+                y_xa = settings.layout.margin.top;
+            }
+            var xaxis = g.append('g')
+                .attr('class', 'zy-x-axis')
+                .attr('transform', 'translate(' + x_xa + ',' + y_xa + ')')
+                .call(xAxis);
+
+            xaxis.selectAll('text')
+                .text(function (d) {
+                    if (settings.xAxis.render instanceof Function) {
+                        return settings.xAxis.render(d);
+                    } else {
+                        return d;
+                    }
+                })
+                .attr('font-size', settings.layout.axisFontSize)
+                .attr('fill', settings.layout.axisFontColor);
+
+            xaxis.selectAll('line')
+                .attr('stroke', settings.layout.axisColor)
+                .attr('shape-rendering', settings.layout.lineRender);
+
+            xaxis.selectAll('path')
+                .attr('stroke', settings.layout.axisColor)
+                .attr('shape-rendering', settings.layout.lineRender);
+
+        }
+
+        if (settings.yAxis.show) {
+            var yaxis = g.append('g')
+                .attr('class', 'zy-y-axis')
+                .call(yAxis);
+
+            yaxis.selectAll('text')
+                .text(function (d) {
+                    if (defaults.yAxis.render instanceof Function) {
+                        return defaults.yAxis.render(d);
+                    } else {
+                        return d;
+                    }
+                })
+                .attr('font-size', settings.layout.axisFontSize)
+                .attr('fill', settings.layout.axisFontColor);
+
+            yaxis.selectAll('line')
+                .attr('stroke', settings.layout.axisColor)
+                .attr('shape-rendering', settings.layout.lineRender);
+
+            yaxis.selectAll('path')
+                .attr('stroke', settings.layout.axisColor)
+                .attr('shape-rendering', settings.layout.lineRender);
+        }
+        /*--------- 添加xy轴 - end ---------*/
+
+        /*---------添加折线 - start ----------*/
+
+        
+        var x = d3.scaleLinear()
+            .domain([0, d3.max(defaults.xAxis.data)])
+            .range([0, width - settings.layout.margin.left - settings.layout.margin.right])
+            var y = d3.scaleLinear()
+            .domain([0, d3.max(defaults.yAxis.data)])
+            .range([height - settings.layout.margin.top - settings.layout.margin.bottom, 0]);
+        var line = d3.line()
+            .defined(function (d) {
+                return d
+            })
+            .x(function (d) {
+                return x(d.x)
+            })
+            .y(function (d) {
+                return y(d.y)
+            })
+            // .interpolate("cardinal");
+            // .curve(d3.curveBundle.beta(1));
+            // .curve(d3.easeCubic.period(0.4));
+
+        // 多条
+        if (settings.data.length > 0) {
+            for (var h = 0; h < settings.data.length; h++) {
+                g.append('path')
+                    .attr('class', 'zy-line-path')
+                    // .attr('transform', 'translate(' + settings.layout.margin.left + ',' + settings.layout.margin.top + ')')
+                    .attr('d', line(settings.data[h]))
+                    .attr('stroke', settings.color[h])
+                    .attr('fill', 'none')
+                    // .attr('data', settings.data[h])
+                    // .attr('data-text', returnText(settings.text[h], settings.data[h][i]))
+                    // .attr('data-value', returnValue(settings.data[h][i]))
+                    .attr('stroke-width', settings.layout.lineWidth)
+                    .attr('shape-rendering', settings.layout.lineEdges)
+                    .on('mousemove', function () {
+                        if (d3.select(this).attr('data-value')) {
+                            d3.select(this)
+                                .attr('stroke-width', 4);
+                            showTip(true, d3.event, d3.select(this));
+                        }
+                    })
+                    .on('mouseout', function () {
+                        if (d3.select(this).attr('data-value')) {
+                            d3.select(this)
+                                .attr('stroke-width', settings.layout.lineWidth);
+                            showTip(false);
+                        }
+                    });
+            }
+        }
+    }
     return charts;
 })();
