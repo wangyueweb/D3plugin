@@ -1040,7 +1040,7 @@ var Xcharts = (function () {
             }
             var xgrid = g.append('g')
                 .attr('class', 'zy-x-grid')
-                //.attr('transform', 'translate(' + x_xg + ',' + y_xg + ')')
+                .attr('transform', 'translate(' + x_xg + ',' + y_xg + ')')
                 .call(xGrid);
 
             xgrid.selectAll('text')
@@ -1753,13 +1753,10 @@ var Xcharts = (function () {
             w1 = +svg.attr("width") - margin1.left - margin1.right,
             h1 = +svg.attr("height") - margin1.top - margin1.bottom,
             h2 = +svg.attr("height") - margin2.top - margin2.bottom;
-        console.log(w1)
-        console.log(height)
-        console.log(svg.attr("height") - margin2.bottom)
-
+        console.log(h1);
         // 创建x和y轴的线性比例尺
         var xScale = d3.scaleLinear().range([0, w1]).domain([0, 8000]).nice(10),
-            yScale = d3.scaleLinear().range([h1, 0]).domain([0, 100]).nice(),
+            yScale = d3.scaleLinear().range([h1, 0]).domain([0, 200]).nice(),
             x2 = d3.scaleLinear().range([0, w1]).domain([0, 8000]).nice(10),
             y2 = d3.scaleLinear().range([h2, 0]).domain([0, 100]);
 
@@ -2096,9 +2093,11 @@ var Xcharts = (function () {
             },
             characteristic: {
                 data: [
-                    ['建议参考管节长度累积分布', '#ff6600'],
-                    ['PII2008成都至重庆管节分布', '#ff6600']
-                ]
+                    ['建议参考管节长度累积分布', '#fe8e07'],
+                    ['PII2008成都至重庆管节分布', '#37a4dd']
+                ], //标签数据
+                width: 230, //标签长度
+                location: 0 //标签所在x方向位置
             }
         };
 
@@ -2124,13 +2123,13 @@ var Xcharts = (function () {
         if (settings.layout.ytag) {
             svg.append('g')
                 .attr('class', 'zy-x-tag')
-                .attr('transform', 'translate(20,'+ height/2 +'),rotate(-90)')
+                .attr('transform', 'translate(20,' + height / 2 + '),rotate(-90)')
                 .append('text')
-                .attr('id','ttext')
+                .attr('id', 'ttext')
                 .text(settings.layout.ytag)
                 .attr('fill', settings.layout.tagColor);
         }
-        
+
         if (settings.layout.xtag) {
             svg.append('g')
                 .attr('class', 'zy-y-tag')
@@ -2141,15 +2140,9 @@ var Xcharts = (function () {
         }
         // legend
         if (settings.legend.data.length) {
-            var lengendTw;
-            if (settings.legend.location != 0) {
-                lengendTw = settings.legend.location;
-            } else {
-                lengendTw = width / 1.8;
-            }
             var legend = svg.append('g')
-                .attr('class', 'zy-line-legend')
-                .attr('transform', 'translate(' +(width - lengendTw) / 2 + ', ' + (settings.layout.margin.top - 20) + ')')
+                .attr('class', 'phy-line-legend')
+                .attr('transform', 'translate(' +(width) / 2 + ', ' + (settings.layout.margin.top - 40) + ')')
                 .selectAll('g')
                 .data(settings.legend.data)
                 .enter()
@@ -2161,24 +2154,39 @@ var Xcharts = (function () {
                 })
                 .attr('fill', viewCon.axisTagColor)
                 .attr('x', function (d, i) {
-                    return i * settings.legend.width + 20;
+                    return i * settings.legend.width;
                 });
         }
 
         // characteristic
         if (settings.legend.data.length) {
             var characteristic = svg.append('g')
-                .attr('class', 'phy-characteristic')
+                .attr('class', 'zy-line-legend')
+                .attr('transform', 'translate('+ settings.layout.margin.left +', ' + (settings.layout.margin.top -
+                    20) + ')')
+                .selectAll('g')
                 .data(settings.characteristic.data)
-                .attr('transform', 'translate(0, ' + (settings.layout.margin.top - 20) + ')')
-            
+                .enter()
+                .append('g');
+
+            characteristic.append('rect')
+                .attr('width', 12)
+                .attr('height', 2)
+                .attr('fill', function (d) {
+                    return d[1];
+                })
+                .attr('x', function (d, i) {
+                    return i * settings.characteristic.width;
+                })
+                .attr('y', -7);
+
             characteristic.append('text')
                 .text(function (d) {
                     return d[0]
                 })
                 .attr('fill', viewCon.axisTagColor)
                 .attr('x', function (d, i) {
-                    return i * settings.legend.width + 20;
+                    return i * settings.characteristic.width + 20;
                 });
         }
 
@@ -2186,8 +2194,8 @@ var Xcharts = (function () {
             .attr('transform', 'translate(' + settings.layout.margin.left + ', ' + settings.layout.margin.top + ')');
 
         // xScale
-        var s_width = width - settings.layout.margin.left - settings.layout.margin.right;
-        var s_height = height - settings.layout.margin.top - settings.layout.margin.bottom;
+        // var s_width = width - settings.layout.margin.left - settings.layout.margin.right;
+        // var s_height = height - settings.layout.margin.top - settings.layout.margin.bottom;
         var xScale;
         if (settings.xAxis.sort === 'asc') {
             xScale = d3.scaleLinear()
@@ -2207,12 +2215,12 @@ var Xcharts = (function () {
             yScale = d3.scaleLinear()
                 .domain([d3.min(settings.yAxis.data), d3.max(settings.yAxis.data)])
                 .range([height - settings.layout.margin.top - settings.layout.margin.bottom, 0])
-                .nice(d3.max(settings.yAxis.data));
+                .nice();
         } else if (settings.yAxis.sort === 'desc') {
             yScale = d3.scaleLinear()
                 .domain([d3.mix(settings.yAxis.data), d3.max(settings.yAxis.data)])
                 .range([height - settings.layout.margin.top - settings.layout.margin.bottom, 0])
-                .nice(d3.max(settings.yAxis.data));
+                .nice();
         }
 
         // xAxis
@@ -2234,7 +2242,6 @@ var Xcharts = (function () {
         }
 
         // yAxis
-        console.log(settings.yAxis.ticks)
         var yAxis;
         if (settings.yAxis.orient === 'left') {
             if (settings.yAxis.ticks === Infinity) {
@@ -2259,7 +2266,7 @@ var Xcharts = (function () {
                 xGrid = d3.axisBottom(xScale)
                     .tickSize([height - settings.layout.margin.top - settings.layout.margin.bottom]);
 
-                    
+
             } else {
                 xGrid = d3.axisBottom(xScale)
                     .tickSize([height - settings.layout.margin.top - settings.layout.margin.bottom])
@@ -2392,8 +2399,19 @@ var Xcharts = (function () {
         }
 
         if (settings.yAxis.show) {
+            var x_yg = 0,
+                y_yg = 0;
+            if (settings.yAxis.orient === 'left') {
+                x_yg = settings.layout.margin.left;
+                y_yg = settings.layout.margin.top;
+            } else if (settings.yAxis.orient === 'right') {
+                x_yg = width - settings.layout.margin.left;
+                y_yg = settings.layout.margin.top;
+            }
+            
             var yaxis = g.append('g')
                 .attr('class', 'zy-y-axis')
+                // .attr('transform', 'translate('+ x_xa +',' + y_xg + ')')
                 .call(yAxis);
 
             yaxis.selectAll('text')
@@ -2419,26 +2437,23 @@ var Xcharts = (function () {
 
         /*---------添加折线 - start ----------*/
 
-        
-        var x = d3.scaleLinear()
-            .domain([0, d3.max(defaults.xAxis.data)])
-            .range([0, width - settings.layout.margin.left - settings.layout.margin.right])
-            var y = d3.scaleLinear()
-            .domain([0, d3.max(defaults.yAxis.data)])
-            .range([height - settings.layout.margin.top - settings.layout.margin.bottom, 0]);
+        // var x = d3.scaleLinear()
+        //     .domain([0, d3.max(defaults.xAxis.data)])
+        //     .range([0, width - settings.layout.margin.left - settings.layout.margin.right])
+        // var y = d3.scaleLinear()
+        //     .domain([0, d3.max(defaults.yAxis.data)])
+        //     .range([height - settings.layout.margin.top - settings.layout.margin.bottom, 0]);
         var line = d3.line()
             .defined(function (d) {
                 return d
             })
             .x(function (d) {
-                return x(d.x)
+                return xScale(d.COUNT);
             })
-            .y(function (d) {
-                return y(d.y)
+            .y(function (d) { //y1
+                return yScale(d.LENGTH);
             })
-            // .interpolate("cardinal");
-            // .curve(d3.curveBundle.beta(1));
-            // .curve(d3.easeCubic.period(0.4));
+            .curve(d3.curveCatmullRom.alpha(0.5));
 
         // 多条
         if (settings.data.length > 0) {

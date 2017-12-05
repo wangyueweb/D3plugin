@@ -8,20 +8,8 @@
         <script src="./d3plugin/reportD3.plugin.js"></script>
         <script src="./d3plugin/allReport.js"></script>
         <style>
-            .area {
-                fill: lightsteelblue;
-            }
-
-            .line {
-                fill: none;
-                stroke: steelblue;
-                stroke-width: 1.5px;
-            }
-
-            .dot {
-                fill: white;
-                stroke: steelblue;
-                stroke-width: 1.5px;
+            .phy-y-tag,.phy-line-legend{
+                text-anchor: middle;  /* 文本水平居中 */
             }
         </style>
     </head>
@@ -36,22 +24,28 @@
         var densityData = dataset.result.densityData; // 密度 - 图2数据
         var averageData = dataset.result.avgAndVariance.LENGTH; // 平均数
         var varianceData = dataset.result.avgAndVariance.VARIANCE; // 方差
-        
-
-        var XArr1 = returnXArr(getXArea(accumulationData));
-        var XArr2 = returnXArr(getXArea(densityData));
-
-        var YArr1 = getYArea(accumulationData)[0];
-        var YArr2 = getYArea(densityData)[0];
 
         var accumulation = getData(accumulationData) // 累积 - 数据转化
         var densition = getData(densityData); // 密度 - 数据转化
 
+        // 返回真实数据x范围
+        var XArr1 = returnXArr(getXArea(accumulationData));
+        var XArr2 = returnXArr(getXArea(densityData));
+
         var maxY1 = d3.max(getYArea(accumulationData)[0])
         var maxY2 = d3.max(getYArea(densityData)[0])
 
-        var min1 = d3.min(XArr1),max1 = d3.max(XArr1),differ1 = (max1-min1);
-        var min2 = d3.min(XArr2),max2 = d3.max(XArr2),differ2 = (max2-min2);
+        var minX1 = d3.min(XArr1),maxX1 = d3.max(XArr1),differ1 = (maxX1-minX1);
+        var minX2 = d3.min(XArr2),maxX2 = d3.max(XArr2),differ2 = (maxX2-minX2);
+
+        var calculate1Data1 = getCalculate1(getLength(differ1));
+        var calculate1Data2 = getCalculate2(getLength(differ2));
+
+        var YArrReal1 = getYArea(accumulationData)[0];
+        var YArrReal2 = getYArea(densityData)[0];
+
+        var YArrCal1 = getXArea(calculate1Data1)[0];
+        var YArrCal2 = getXArea(calculate1Data2)[0];
 
         /**
          * @param differ:值域的差，val为值间距间隔参数(Number)，默认没有，添加后值间距为 默认间距 * val
@@ -80,13 +74,33 @@
             return arr;
         }
 
-        var len1 = getLength(differ1);
-        var len2 = getLength(differ2);
-        var commonData1 = getCalculate1(len1);
-        var commonData2 = getCalculate2(len2);
+        /**
+         * @param realValue - Y轴真实数据范围, calValue - Y轴计算数据范围,通过比较，返回需要的值范围
+        */
+        function compareYMin(realValue, calValue){
+            if(realValue >= calValue){
+                return calValue
+            } else {
+                return realValue
+            }
+        }
 
-        var accumulateData = [accumulation,commonData1];
-        var density = [densition,commonData2];
+        function compareYMax(realValue, calValue){
+            if(realValue >= calValue){
+                return realValue
+            } else {
+                return calValue
+            }
+        }
+
+        var minY_1 = compareYMin(d3.min(YArrReal1),d3.min(YArrCal1)),
+            maxY_1 = compareYMax(d3.max(YArrReal1),d3.max(YArrCal1));
+
+        var minY_2 = compareYMin(d3.min(YArrReal2),d3.min(YArrCal2)),
+            maxY_2 = compareYMax(d3.max(YArrReal2),d3.max(YArrCal2));
+
+        var accumulateData = [accumulation,calculate1Data1];
+        var density = [densition,calculate1Data2];
 
         var melege_score_text = [],
             melege_score_legend = [
@@ -130,7 +144,7 @@
             if(data.length){
                 var arr = [],x,y;
                 for(var i = 0; i < data.length; i++){
-                    arr.push({'x':data[i].LENGTH,'y':data[i].COUNT})
+                    arr.push({'COUNT':data[i].LENGTH,'LENGTH':data[i].COUNT})
                 }
                 return arr;
             }
@@ -163,9 +177,9 @@
         function getCalculate1(arr){
             var result = [];
             for(var i=0;i<arr[1];i++){
-                var x = min1 + i*arr[0];
-                var y = calculate1(x,averageData,varianceData,maxY1);
-                result.push({x:x,y:y});
+                var x = minX1 + i*arr[0];
+                var y = calculate1(x,averageData,0.1,maxY1);
+                result.push({'COUNT':x,'LENGTH':y});
             }
             return result;
         }
@@ -178,7 +192,7 @@
                 ticks: 10 // x轴刻度数
             },
             yAxis: {
-                data: [d3.min(YArr1), d3.max(YArr1)],
+                data: [minY_1, maxY_1],
                 ticks: 10
             },
             data: accumulateData,
@@ -192,7 +206,7 @@
                 margin: {
                     left: 60,
                     right: 50,
-                    top: 50,
+                    top: 70,
                     bottom: 50
                 }
             },
@@ -204,16 +218,23 @@
                 data: melege_score_legend,
                 width: 170,
                 location: 0
+            },
+            characteristic: {
+                data: [
+                    ['建议参考管节长度累积分布', '#fe8e07'],
+                    ['PII2008成都至重庆管节分布', '#37a4dd']
+                ], //标签数据
+                width: 230, //标签长度
+                location: 0 //标签所在x方向位置
             }
         });
-        
         function getCalculate2(arr){
             var result = [];
             for(var i=0;i<arr[1];i++){
-                var x = min2 + i * arr[0];
-                var y = calculate2(x,averageData,varianceData,maxY2);
+                var x = minX2 + i * arr[0];
+                var y = calculate2(x,averageData,0.1,maxY2);
 
-                result.push({x:x,y:y});
+                result.push({'COUNT':x,'LENGTH':y});
             }
             return result;
         }
@@ -226,7 +247,7 @@
                 ticks: 10 // x轴刻度数
             },
             yAxis: {
-                data: [d3.min(YArr2), d3.max(YArr2)],
+                data: [minY_2, maxY_2],
                 ticks: 10
             },
             data: density,
@@ -240,7 +261,7 @@
                 margin: {
                     left: 60,
                     right: 50,
-                    top: 50,
+                    top: 70,
                     bottom: 50
                 }
             },
@@ -252,6 +273,14 @@
                 data: melege_score_legend,
                 width: 170,
                 location: 0
+            },
+            characteristic: {
+                data: [
+                    ['建议参考管节长度累积分布', '#fe8e07'],
+                    ['PII2008成都至重庆管节分布', '#37a4dd']
+                ], //标签数据
+                width: 230, //标签长度
+                location: 0 //标签所在x方向位置
             }
         });
     </script>
