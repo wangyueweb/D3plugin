@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./js/jquery-2.2.3.js"></script>
+
+    <!-- <link rel="stylesheet" href="./css/core.css"> -->
+    <link rel="stylesheet" lang="less" href="./css/DL-ui.less">
+    <script>
+    window.pdf_doc = 'true';
+    </script>
+</head>
+
+<body>
+    <input type="text" value="1" id="pipeline">
+    <input type="text" value="2" id="begin">
+    <input type="text" value="3" id="end">
+
+    <!-- export pdf or file window -->
+    <div class="zy-action-box zy-export-box">
+        <div class="zy-action-title">
+            <span class="zy-action-span">导出</span>
+            <i class="zy-action-close"></i>
+        </div>
+        <div class="zy-action-inner">
+            <br>
+            <div class="zy-form-line">
+                <div class="zy-input-group w-100">
+                    <div class="zy-input-inner">
+                        <label class="zy-i-label w-10 l">名称</label>
+                        <input name="export_name" autocomplete="off" class="zy-i-input r w-90" type="text">
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="zy-pdf-doc-line hidden">
+                    <div class="zy-radio-group">
+                        <label>
+                            <i class="zy-radio-icon active" data-type="pdf"></i> 导出PDF(*.pdf)</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label>
+                            <i class="zy-radio-icon" data-type="doc"></i> 导出WORD(*.doc)</label>
+                    </div>
+                </div>
+                <iframe name="export_iframe" class="hidden" src=""></iframe>
+                <form name="export_form" class="hidden" method="post" action="" target="export_iframe"></form>
+                <div class="clear"></div>
+            </div>
+            <div class="zy-form-line t-c">
+                <br>
+                <br>
+                <button class="zy-button zy-set-save export-button-yes" type="button"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="zy-form-line">
+        <span class="l">
+            <button id="JQ_search_btn" class="zy-button zy-search">
+                <i class="zy-search-icon"></i>查询</button>
+        </span>
+        <span class="r">
+            <button id="JQ_export_btn" class="zy-button-s zy-exports-s" type="button">
+                <i class="zy-exports-icon"></i>导出</button>
+        </span>
+        <div class="clear"></div>
+    </div>
+    <script src="./js/DL-database.js"></script>
+    <script src="./js/DL-ui.js"></script>
+    <script>
+        var $pipeline = $('#pipeline'),
+            $begin = $('#begin'),
+            $end = $('#end');
+
+        // 搜索条件
+        var filter = {
+            // 获得表单项
+            getCondition: function () {
+                var data = {};
+                //管道名称
+                data.pipeLineId = function () {
+                    var v = $pipeline.val();
+                    if (v) {
+                        return v;
+                    }
+                    return '';
+                }();
+                data.pipeName = function () {
+                    var v = $pipeline.val('text');
+                    if (v) {
+                        return v;
+                    }
+                    return '';
+                }();
+                //起点绝对距离
+                data.fromMileage = function () {
+                    var v = $begin.val('mile');
+                    if (DLBase.notEmpty(v)) {
+                        return v;
+                    }
+                    return '';
+                }();
+                //终点绝对距离
+                data.toMileage = function () {
+                    var v = $end.val('mile');
+                    if (DLBase.notEmpty(v)) {
+                        return v;
+                    }
+                    return '';
+                }();
+                return data;
+            },
+            // 执行查询后的筛选对象
+            getExportFilter: function () {
+                return filter.getCondition();
+            }
+        };
+        // 导出
+        $('#JQ_export_btn').click(function () {
+            var params = filter.getCondition;
+            if (params instanceof Function) {
+                params = params();
+            }
+            $(this).EXPT({
+                doc: DLBase.pdf_doc,
+                type: 'name',
+                name: params.pipeName + '风险评价统计图',
+                yesBtnAct: function (callback, fname, type) {
+                    callback();
+                    if (type == "pdf") {
+                        canvasPdf.exportHtmlPdf({
+                            dom: $('#JQ_pdf_area'),
+                            server: DyyBase.root_path + '/comm/downFullImgPdf.json',
+                            param: {
+                                fileName: fname,
+                                name: params.pipeName + '风险评价统计图'
+                            }
+                        });
+                    } else {
+                        goTop(); // 导出doc格式需要回到页面顶部，否则base64为空白图片
+                        var param = [];
+                        param.push({
+                            name: "fileName",
+                            value: fname
+                        });
+                        param.push({
+                            name: "name",
+                            value: params.pipeName + '风险评价统计图'
+                        });
+                        getWordParam(param);
+                    }
+                }
+            });
+        });
+
+        var arr = [{a:1,b:2,c:9},{a:2,b:3,c:5},{a:5,b:9},{a:4,b:2,c:5},{a:4,b:5,c:7}]
+        // console.log(arr.slice(0))
+        console.log(DL.arraySort(arr,'a,c'));
+    </script>
+
+
+
+</body>
+
+</html>
